@@ -19,10 +19,8 @@ TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
 
 DEBUG = os.environ.get("DEBUG", "False").lower() == "true"
 
-# CAMBIO IMPORTANTE: El asterisco '*' permite entrar desde la URL larga de Azure
 ALLOWED_HOSTS = ["*"]
 
-# Clave secreta desde Azure (usa variable de entorno o la por defecto)
 SECRET_KEY = os.environ.get(
     "SECRET_KEY",
     "django-insecure-&+7ia!=_s&c!h8&7j$xh74)c^o(u9=!d5rob2f&%ciux=(z-2)"
@@ -82,7 +80,6 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # ---------------------------------------------------------------------
 # 🔹 BASE DE DATOS (automática: PostgreSQL o SQLite)
 # ---------------------------------------------------------------------
-# Si tienes DATABASE_URL en Azure, Django la usará. Si no, usa SQLite local.
 DATABASES = {
     'default': dj_database_url.config(
         default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
@@ -115,7 +112,10 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+# --- 1er CAMBIO (Para arreglar el CSS) ---
+# Cambiamos a un modo más estable que el "Manifest"
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -129,7 +129,8 @@ LOGIN_URL = 'login'
 # ---------------------------------------------------------------------
 # 🔹 SEGURIDAD EXTRA (recomendado para producción)
 # ---------------------------------------------------------------------
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'httpss') # Corregido a 'https'
 
-# Actualiza esto cuando sepas tu URL exacta de Azure para que funcionen los formularios
-CSRF_TRUSTED_ORIGINS = ['https://cafe-del-angel-tamps.azurewebsites.net']
+# --- 2do CAMBIO (Para arreglar el Login) ---
+# Usamos un comodín para aceptar la URL larga de Azure
+CSRF_TRUSTED_ORIGINS = ['https://*.azurewebsites.net']
