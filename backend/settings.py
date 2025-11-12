@@ -1,30 +1,40 @@
 """
 Django settings for backend project.
+Configurado para despliegue en Azure App Service.
 """
 
 import os
 from pathlib import Path
+import dj_database_url  # Asegúrate de instalarlo: pip install dj-database-url
 
 # BASE DIR
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# 🔹 Templates
+# 🔹 TEMPLATES
 TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
 
+# ---------------------------------------------------------------------
+# 🔐 SEGURIDAD Y CONFIGURACIÓN DE HOSTS
+# ---------------------------------------------------------------------
 
-# --- ¡CONFIGURACIÓN DE SEGURIDAD PARA AZURE! ---
+DEBUG = os.environ.get("DEBUG", "False").lower() == "true"
 
-# 1. Desactivar DEBUG para producción (CRÍTICO)
-DEBUG = False 
+# Usa la URL de tu app en Azure (ajústala si cambia el nombre)
+ALLOWED_HOSTS = [
+    "cafe-del-angel-tamps.azurewebsites.net",
+    "127.0.0.1",
+    "localhost",
+]
 
-# 2. Reemplaza 'nombre-de-tu-app' con el nombre que elegirás en Azure
-ALLOWED_HOSTS = ['nombre-de-tu-app.azurewebsites.net'] 
+# Clave secreta desde Azure (usa variable de entorno)
+SECRET_KEY = os.environ.get(
+    "SECRET_KEY",
+    "django-insecure-&+7ia!=_s&c!h8&7j$xh74)c^o(u9=!d5rob2f&%ciux=(z-2)"
+)
 
-# Clave Secreta - La reemplazaremos en Azure
-SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-&+7ia!=_s&c!h8&7j$xh74)c^o(u9=!d5rob2f&%ciux=(z-2)')
-
-
-# APLICACIONES
+# ---------------------------------------------------------------------
+# 🔹 APLICACIONES
+# ---------------------------------------------------------------------
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -36,10 +46,12 @@ INSTALLED_APPS = [
     'usuarios',
 ]
 
-# MIDDLEWARE (Añadimos WhiteNoise para estáticos)
+# ---------------------------------------------------------------------
+# 🔹 MIDDLEWARE
+# ---------------------------------------------------------------------
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware', # <-- NUEVO: Para servir CSS/JS en Azure
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # sirve CSS/JS estáticos
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -50,7 +62,9 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'backend.urls'
 
+# ---------------------------------------------------------------------
 # 🔹 TEMPLATES
+# ---------------------------------------------------------------------
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -69,23 +83,21 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'backend.wsgi.application'
 
-# 🔹 CONFIGURACIÓN DE BASE DE DATOS (¡PostgreSQL en Azure!)
+# ---------------------------------------------------------------------
+# 🔹 BASE DE DATOS (automática: PostgreSQL o SQLite)
+# ---------------------------------------------------------------------
+# Si tienes DATABASE_URL en Azure, Django la usará. Si no, usa SQLite local.
 DATABASES = {
-    'default': {
-        # Usaremos PostgreSQL en producción
-        'ENGINE': 'django.db.backends.postgresql', 
-        
-        # Azure nos dará estas variables de entorno con las credenciales:
-        'NAME': os.environ.get('DB_NAME', 'db_local_dev'),
-        'USER': os.environ.get('DB_USER', 'user_local_dev'),
-        'PASSWORD': os.environ.get('DB_PASSWORD', 'pass_local_dev'),
-        'HOST': os.environ.get('DB_HOST', 'localhost'),
-        'PORT': os.environ.get('DB_PORT', 5432),
-    }
+    'default': dj_database_url.config(
+        default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
+        conn_max_age=600,
+        ssl_require=False
+    )
 }
 
-
-# 🔹 Validadores de contraseña
+# ---------------------------------------------------------------------
+# 🔹 VALIDACIÓN DE CONTRASEÑAS
+# ---------------------------------------------------------------------
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
@@ -93,31 +105,33 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
-# 🔹 Idioma y zona horaria
+# ---------------------------------------------------------------------
+# 🔹 CONFIGURACIONES REGIONALES
+# ---------------------------------------------------------------------
 LANGUAGE_CODE = 'es-mx'
 TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-# 🔹 Clave primaria por defecto
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+# ---------------------------------------------------------------------
+# 🔹 ARCHIVOS ESTÁTICOS Y MEDIA
+# ---------------------------------------------------------------------
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
-# 🔹 Modelo de usuario personalizado
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# ---------------------------------------------------------------------
+# 🔹 USUARIO PERSONALIZADO Y LOGIN
+# ---------------------------------------------------------------------
 AUTH_USER_MODEL = 'usuarios.Usuario'
 LOGIN_URL = 'login'
 
-
-# --- CONFIGURACIÓN DE ARCHIVOS ESTÁTICOS Y MEDIA PARA PRODUCCIÓN ---
-
-# 1. Dónde Django recogerá todos los archivos estáticos para Azure (la carpeta 'staticfiles')
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-# Usamos el storage de WhiteNoise para comprimir y servir CSS/JS
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-STATIC_URL = '/static/'
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static'),
-]
-
-# 2. Archivos de Media (Imágenes de productos subidas por el Admin)
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+# ---------------------------------------------------------------------
+# 🔹 SEGURIDAD EXTRA (recomendado para producción)
+# ---------------------------------------------------------------------
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+CSRF_TRUSTED_ORIGINS = ['https://cafe-del-angel-tamps.azurewebsites.net']
