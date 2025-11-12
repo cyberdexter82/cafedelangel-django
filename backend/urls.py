@@ -7,19 +7,21 @@ from django.views.static import serve
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include('api.urls')),
+    
+    # ✅ El módulo 'api.urls' ahora manejará las rutas de reseñas/avatar
+    path('api/', include('api.urls')), 
+    
     path('', api_views.login_view, name='inicio'),
 ]
 
 # -------------------------------------------------------------
-# CORRECCIÓN PARA AZURE
+# CORRECCIÓN PARA AZURE (Se mantiene igual, es correcto)
 # -------------------------------------------------------------
 # 1. Configuramos las rutas de archivos estáticos y media
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 # 2. EL TRUCO: Forzamos a Django a servir las imágenes de la carpeta media
-# Esto permite que se vean las fotos de los cafés en producción sin configurar un servidor externo.
 urlpatterns += [
     re_path(r'^media/(?P<path>.*)$', serve, {
         'document_root': settings.MEDIA_ROOT,

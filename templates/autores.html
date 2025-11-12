@@ -2,76 +2,72 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Página de Bienvenida y Autoría</title>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Página de Bienvenida y Autoría</title>
 
-    <!-- 👇 --- AÑADIDO: ENLACES DE LA PÁGINA PRINCIPAL --- 👇 -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        'brown-500': '#6F4E37', 
-                        'brown-700': '#4A2312',
-                    }
+<!-- 👇 --- ENLACES DE LA PÁGINA PRINCIPAL --- 👇 -->
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+<script>
+    tailwind.config = {
+        theme: {
+            extend: {
+                colors: {
+                    'brown-500': '#6F4E37', 
+                    'brown-700': '#4A2312',
                 }
             }
         }
-    </script>
-    <!-- --- FIN DE ENLACES AÑADIDOS --- -->
+    }
+</script>
+<!-- --- FIN DE ENLACES AÑADIDOS --- -->
 
-    <style>
-        /* Tu CSS original (modificado para que no choque con el body de Tailwind) */
-        .autores-body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            background-color: #f4f4f4;
-            color: #333;
-            text-align: center; /* Centrar todo el contenido */
-            padding-bottom: 40px; /* Espacio extra al final */
-        }
-        .autores-container {
-            background-color: #fff;
-            padding: 40px 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-            max-width: 700px;
-            margin: 40px auto; /* Centrado y con margen */
-        }
-        .autores-container h1 {
-            color: #6a0000; /* Color café oscuro */
-            margin-bottom: 10px;
-            font-size: 2.2em;
-        }
-        p.authors-message {
-            color: #444;
-            font-size: 1.1em;
-            margin-bottom: 30px;
-            border-bottom: 2px solid #eee;
-            padding-bottom: 20px;
-        }
-        #mainImage {
-            margin-top: 20px;
-            max-width: 100%;
-            height: auto;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-            border: 5px solid #6a0000; /* Borde para resaltar la imagen */
-        }
-    </style>
+<style>
+    /* Tu CSS original (modificado para que no choque con el body de Tailwind) */
+    .autores-body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+        background-color: #f4f4f4;
+        color: #333;
+        /* Quitamos text-align: center para que la barra de nav se vea bien */
+        padding-bottom: 40px; 
+    }
+    .autores-container {
+        background-color: #fff;
+        padding: 40px 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        max-width: 700px;
+        margin: 40px auto; 
+        text-align: center; /* Centrar el contenido de la tarjeta */
+    }
+    .autores-container h1 {
+        color: #6a0000; 
+        margin-bottom: 10px;
+        font-size: 2.2em;
+    }
+    p.authors-message {
+        color: #444;
+        font-size: 1.1em;
+        margin-bottom: 30px;
+        border-bottom: 2px solid #eee;
+        padding-bottom: 20px;
+    }
+    #mainImage {
+        margin-top: 20px;
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        border: 5px solid #6a0000; 
+    }
+</style>
 </head>
-<!-- 
-  👇 MODIFICADO: 
-  Quitamos el 'text-align: center' del body para que la navbar 
-  de Tailwind se vea bien, y añadimos 'font-sans'
--->
 <body class="font-sans">
 
-    <!-- 👇 --- AÑADIDO: BARRA DE NAVEGACIÓN COMPLETA --- 👇 -->
+    <!-- 👇 --- BARRA DE NAVEGACIÓN COMPLETA --- 👇 -->
     <header class="bg-gray-50 text-xs py-2 border-b border-gray-200">
         <div class="container mx-auto px-4 flex justify-between items-center max-w-6xl">
             <div class="flex items-center gap-2 text-gray-600">
@@ -88,7 +84,8 @@
     <nav class="py-4 shadow-md bg-white">
         <div class="container mx-auto px-4 flex justify-between items-center max-w-6xl">
             <div class="flex items-center gap-8">
-                <img alt="Logo Cafe del Angel" src="{% static 'Images/iconocafe1.png' %}" class="w-10 h-10 object-contain" />
+                <!-- CORRECCIÓN: Images -> images -->
+                <img alt="Logo Cafe del Angel" src="{% static 'images/iconocafe1.png' %}" class="w-10 h-10 object-contain" />
                 <div class="hidden md:flex gap-6 text-sm font-medium text-gray-700">
                     <!-- Lógica de navegación dinámica -->
                     {% if user.is_authenticated %}
@@ -114,10 +111,7 @@
     <!-- --- FIN DE BARRA DE NAVEGACIÓN --- -->
 
 
-    <!-- 
-      👇 TU CÓDIGO ORIGINAL (con clases CSS renombradas) 
-      para que no choque con el CSS de Tailwind
-    -->
+    <!-- TU CÓDIGO ORIGINAL (con clases CSS renombradas) -->
     <div class="autores-body">
         <div class="autores-container">
             <h1>¡Bienvenido a Cafe del Angel! ☕</h1>
@@ -127,12 +121,9 @@
                 Esperamos que disfrutes la experiencia tanto como nosotros disfrutamos crearla.
             </p>
             
-            <!-- 
-              👇 CORREGIDO: 
-              Añadido 'Images/' a la ruta estática
-            -->
+            <!-- CORRECCIÓN: Images -> images -->
             <img id="mainImage" 
-                 src="{% static 'Images/GrupoJ.jpg' %}" 
+                 src="{% static 'images/GrupoJ.jpg' %}" 
                  alt="Imagen de presentación de la página web">
             
         </div>

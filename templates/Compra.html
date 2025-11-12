@@ -5,7 +5,7 @@
   <meta charset="utf-8"/>
   <meta content="width=device-width, initial-scale=1" name="viewport"/>
   <title>
-   Comprar Café - Café del Ángel
+  	Comprar Café - Café del Ángel
   </title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet"/>
@@ -18,9 +18,10 @@
         theme: {
             extend: {
                 colors: {
-                    'brown-main': '#6b4f4f', // Café principal
-                    'brown-dark': '#4a2312', // Café muy oscuro
-                    'yellow-accent': '#d4a373', // Tostado de acento
+                    // Mapeo de colores para usar en JS y CSS
+                    'brown-main': '#6b4f4f',
+                    'brown-dark': '#4a2312',
+                    'yellow-accent': '#d4a373',
                 }
             }
         }
@@ -28,6 +29,15 @@
   </script>
 
   <style>
+    /* Se definen las variables CSS aquí para que estén disponibles 
+    en todos los bloques de estilo, ya que no se pueden usar las de Tailwind directamente en CSS.
+    */
+    :root {
+        --brown-main: #6b4f4f;
+        --brown-dark: #4a2312;
+        --yellow-accent: #d4a373; 
+    }
+    
     /* Estilos del Botón de Compra */
     .btn-buy {
         background-color: var(--yellow-accent);
@@ -173,17 +183,17 @@
 
   <div class="cart-dropdown-container">
     <button class="cart-btn" id="cart-button">
-        <i class="fas fa-shopping-cart mr-2"></i>
-        <span class="font-bold text-lg" id="cart-counter">0</span>
+      <i class="fas fa-shopping-cart mr-2"></i>
+      <span class="font-bold text-lg" id="cart-counter">0</span>
     </button>
 
     <div class="cart-dropdown hidden" id="cart-dropdown-content">
-        <div id="cart-items-list">
-            <p class="cart-empty-message">El carrito está vacío. ¡Compra algo!</p>
-        </div>
-        <div class="cart-actions">
-            <a href="{% url 'pagina_practica' %}">Ir a Inicio</a>
-        </div>
+      <div id="cart-items-list">
+        <p class="cart-empty-message">El carrito está vacío. ¡Compra algo!</p>
+      </div>
+      <div class="cart-actions">
+        <a href="{% url 'pagina_practica' %}">Ir a Inicio</a>
+      </div>
     </div>
   </div>
 
@@ -276,9 +286,13 @@
     // ===================================
 
     function showModal(title, message, isWarning = false) {
+        // Obtenemos los colores de las variables CSS para usarlos en JS
+        const yellowAccent = getComputedStyle(document.documentElement).getPropertyValue('--yellow-accent').trim();
+        const redColor = '#ef4444'; // Tailwind red-500
+
         modalTitle.innerHTML = isWarning 
-            ? `<i class="fas fa-exclamation-triangle text-red-500 mr-3"></i> ${title}`
-            : `<i class="fas fa-mug-hot text-yellow-accent mr-3"></i> ${title}`;
+            ? `<i class="fas fa-exclamation-triangle text-red-500 mr-3" style="color:${redColor}"></i> ${title}`
+            : `<i class="fas fa-mug-hot text-yellow-accent mr-3" style="color:${yellowAccent}"></i> ${title}`;
             
         modalMessage.textContent = message;
         
@@ -338,7 +352,7 @@
         }
         // Cierra el dropdown del carrito si está abierto
         if (!cartDropdown.classList.contains('hidden')) {
-             cartDropdown.classList.add('hidden');
+              cartDropdown.classList.add('hidden');
         }
       }
     });

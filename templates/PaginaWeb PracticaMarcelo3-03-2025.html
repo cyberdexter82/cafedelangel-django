@@ -40,9 +40,8 @@
     <nav class="py-4 shadow-md bg-white">
         <div class="container mx-auto px-4 flex justify-between items-center max-w-6xl">
             <div class="flex items-center gap-8">
-                <img alt="Logo Cafe del Angel" src="{% static 'Images/iconocafe1.png' %}" class="w-10 h-10 object-contain" />
+                <img alt="Logo Cafe del Angel" src="{% static 'images/iconocafe1.png' %}" class="w-10 h-10 object-contain" />
                 
-                <!-- 👇 --- ¡SECCIÓN DE NAVEGACIÓN MODIFICADA! --- 👇 -->
                 <div class="hidden md:flex gap-6 text-sm font-medium text-gray-700 items-center">
                     
                     <a href="{% url 'pagina_practica' %}" class="hover:text-brown-500">INICIO</a>
@@ -51,19 +50,15 @@
                     <a href="{% url 'autores' %}" class="hover:text-brown-500">INTEGRANTES</a>
                     
                     {% if user.is_authenticated %}
-                        <!-- Si el usuario SÍ está logueado -->
                         <span class="text-gray-900 font-medium">¡Hola, {{ user.username }}!</span>
                         <a href="{% url 'logout' %}" class="text-red-600 hover:text-red-800 font-bold">CERRAR SESIÓN</a>
                     {% else %}
-                        <!-- Si el usuario NO está logueado -->
                         <a href="{% url 'login' %}" class="text-blue-600 hover:text-blue-800 font-bold">INICIAR SESIÓN</a>
                         <a href="{% url 'registro' %}" class="hover:text-brown-500">REGISTRO</a>
                     {% endif %}
                     
                 </div>
-                <!-- --- FIN DE LA SECCIÓN MODIFICADA --- -->
-
-            </div>
+                </div>
             <div class="flex items-center border border-gray-300 rounded-lg overflow-hidden">
                 <input placeholder="Buscar..." type="text" class="p-2 text-sm focus:outline-none w-32 sm:w-48" />
                 <button class="bg-brown-500 p-2 text-white hover:bg-brown-700 transition duration-150">
@@ -74,7 +69,7 @@
     </nav>
     
     <section class="relative">
-        <img alt="Cafe Banner" src="{% static 'Images/cafe1.png' %}" class="w-full h-auto object-cover max-h-80" />
+        <img alt="Cafe Banner" src="{% static 'images/cafe1.png' %}" class="w-full h-auto object-cover max-h-80" />
         <div class="absolute inset-0 flex flex-col justify-center items-center text-white bg-black bg-opacity-30">
             <h1></h1>
             <h3 class="text-xl sm:text-2xl font-semibold tracking-wider">100% Natural Café Fresco y Sabroso</h3>
@@ -122,7 +117,7 @@
                 
                 <div class="relative group overflow-hidden rounded-xl shadow-lg hover:shadow-xl transition duration-300">
                     <a href="{% url 'otra_pagina' %}">
-                        <img alt="Café Moca" src="{% static 'Images/Cafemoca1.png' %}" class="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-105" />
+                        <img alt="Café Moca" src="{% static 'images/Cafemoca1.png' %}" class="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-105" />
                         <div class="absolute inset-0 bg-black bg-opacity-40 flex flex-col justify-end p-4">
                             <h3 class="text-xl font-bold text-white mb-2">Café Moca</h3>
                             <span class="inline-block px-4 py-2 bg-brown-500 text-white text-sm font-semibold rounded-full hover:bg-brown-700 transition duration-200">
@@ -134,7 +129,7 @@
                 
                 <div class="relative group overflow-hidden rounded-xl shadow-lg hover:shadow-xl transition duration-300">
                     <a href="{% url 'otra_pagina' %}">
-                        <img alt="Expreso Americano" src="{% static 'Images/Cafeexpreso1.png' %}" class="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-105" />
+                        <img alt="Expreso Americano" src="{% static 'images/Cafeexpreso1.png' %}" class="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-105" />
                         <div class="absolute inset-0 bg-black bg-opacity-40 flex flex-col justify-end p-4">
                             <h3 class="text-xl font-bold text-white mb-2">Expreso Americano</h3>
                             <span class="inline-block px-4 py-2 bg-brown-500 text-white text-sm font-semibold rounded-full hover:bg-brown-700 transition duration-200">
@@ -146,7 +141,7 @@
 
                 <div class="relative group overflow-hidden rounded-xl shadow-lg hover:shadow-xl transition duration-300">
                     <a href="{% url 'otra_pagina' %}">
-                        <img alt="Capuchino" src="{% static 'Images/Cafecapuchino1.png' %}" class="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-105" />
+                        <img alt="Capuchino" src="{% static 'images/Cafecapuchino1.png' %}" class="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-105" />
                         <div class="absolute inset-0 bg-black bg-opacity-40 flex flex-col justify-end p-4">
                             <h3 class="text-xl font-bold text-white mb-2">Capuchino</h3>
                             <span class="inline-block px-4 py-2 bg-brown-500 text-white text-sm font-semibold rounded-full hover:bg-brown-700 transition duration-200">
@@ -174,7 +169,7 @@
                 
                 <div class="bg-white p-4 rounded-xl shadow-lg hover:shadow-xl transition duration-300 flex flex-col items-center text-center">
                     <a href="{% url 'otra_pagina' %}" class="block w-full">
-                        <img alt="Cafe Irish" src="{% static 'Images/Cafeirish1.png' %}" class="w-full h-40 object-cover rounded-lg mb-3" />
+                        <img alt="Cafe Irish" src="{% static 'images/Cafeirish1.png' %}" class="w-full h-40 object-cover rounded-lg mb-3" />
                     </a>
                     <h3 class="font-semibold text-lg mb-1 text-brown-700">Cafe Irish</h3>
                     <div class="flex justify-center text-yellow-500 text-sm mb-2">
@@ -192,7 +187,7 @@
                 
                 <div class="bg-white p-4 rounded-xl shadow-lg hover:shadow-xl transition duration-300 flex flex-col items-center text-center">
                     <a href="{% url 'otra_pagina' %}" class="block w-full">
-                        <img alt="Cafe Inglés" src="{% static 'Images/CafeIngles1.png' %}" class="w-full h-40 object-cover rounded-lg mb-3" />
+                        <img alt="Cafe Inglés" src="{% static 'images/CafeIngles1.png' %}" class="w-full h-40 object-cover rounded-lg mb-3" />
                     </a>
                     <h3 class="font-semibold text-lg mb-1 text-brown-700">Cafe Inglés</h3>
                     <div class="flex justify-center text-yellow-500 text-sm mb-2">
@@ -210,7 +205,7 @@
 
                 <div class="bg-white p-4 rounded-xl shadow-lg hover:shadow-xl transition duration-300 flex flex-col items-center text-center">
                     <a href="{% url 'otra_pagina' %}" class="block w-full">
-                        <img alt="Cafe Australiano" src="{% static 'Images/CafeAutriaco1.png' %}" class="w-full h-40 object-cover rounded-lg mb-3" />
+                        <img alt="Cafe Australiano" src="{% static 'images/CafeAutriaco1.png' %}" class="w-full h-40 object-cover rounded-lg mb-3" />
                     </a>
                     <h3 class="font-semibold text-lg mb-1 text-brown-700">Cafe Australiano</h3>
                     <div class="flex justify-center text-yellow-500 text-sm mb-2">
@@ -226,7 +221,7 @@
 
                 <div class="bg-white p-4 rounded-xl shadow-lg hover:shadow-xl transition duration-300 flex flex-col items-center text-center">
                     <a href="{% url 'otra_pagina' %}" class="block w-full">
-                        <img alt="Cafe Helado" src="{% static 'Images/CafeHelado1.png' %}" class="w-full h-40 object-cover rounded-lg mb-3" />
+                        <img alt="Cafe Helado" src="{% static 'images/CafeHelado1.png' %}" class="w-full h-40 object-cover rounded-lg mb-3" />
                     </a>
                     <h3 class="font-semibold text-lg mb-1 text-brown-700">Cafe Helado</h3>
                     <div class="flex justify-center text-yellow-500 text-sm mb-2">

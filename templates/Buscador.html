@@ -1,105 +1,231 @@
-{% load static %} <!DOCTYPE html>
+{% load static %}
+<!DOCTYPE html>
 <html lang="es">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-<title>Buscador de Café</title>
-    <link href="{% static 'css/style2.css' %}" rel="stylesheet" />
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport"/>
+  <title>Buscador de Café</title>
+  
+  <link href="{% static 'css/style2.css' %}" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&amp;display=swap" rel="stylesheet"/>
 
-</head>
-<body>
-  <div class="container" role="main">
-    <h1>Buscador de Café del Angel</h1>
-    <label for="searchInput">Buscar tu café preferible:</label>
-    <input id="searchInput" type="text" placeholder="Ejemplo: Café Moca" aria-label="Buscar café" />
-    <button id="searchBtn" type="button">Buscar</button>
-    <section class="results" id="results" aria-live="polite" aria-atomic="true"></section>
-  </div>
+  <style>
+    /* Estilos base para que el diseño se vea limpio */
+    body {
+        font-family: 'Montserrat', sans-serif;
+        background-color: #f5f5f5;
+        color: #4A2312; /* Café Oscuro */
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        min-height: 100vh;
+        margin: 0;
+        padding-top: 50px;
+    }
+
+    .container {
+        width: 90%;
+        max-width: 600px;
+        background: white;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+    }
+
+    h1 {
+        font-size: 2em;
+        font-weight: 700;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+    }
+
+    #searchInput {
+        width: calc(100% - 100px); /* Deja espacio para el botón */
+        padding: 12px;
+        border: 2px solid #D2B48C; /* Borde tostado */
+        border-radius: 8px 0 0 8px;
+        font-size: 1em;
+        box-sizing: border-box;
+        float: left;
+    }
+
+    #searchBtn {
+        width: 100px;
+        padding: 12px;
+        background-color: #6F4E37; /* Café principal */
+        color: white;
+        border: none;
+        border-radius: 0 8px 8px 0;
+        cursor: pointer;
+        font-size: 1em;
+        font-weight: 600;
+        transition: background-color 0.2s;
+    }
+
+    #searchBtn:hover {
+        background-color: #4A2312;
+    }
+    
+    .search-input-group::after {
+        content: "";
+        display: table;
+        clear: both;
+    }
+    
+    /* Resultados */
+    .results {
+        margin-top: 30px;
+        border-top: 1px solid #eee;
+        padding-top: 20px;
+    }
+
+    .card {
+        background: #fafafa;
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        margin-bottom: 15px;
+        text-align: left;
+        transition: transform 0.2s;
+    }
+    .card:hover {
+        transform: translateY(-2px);
+    }
+
+    .card h3 {
+        font-size: 1.3em;
+        color: #6F4E37;
+        margin-top: 0;
+        margin-bottom: 5px;
+    }
+
+    .card p {
+        margin: 5px 0 10px 0;
+        color: #555;
+        font-size: 0.95em;
+    }
+
+    .card a {
+        color: #D4A373; /* Tostado de acento */
+        text-decoration: none;
+        font-weight: 600;
+        display: inline-block;
+        margin-top: 5px;
+    }
+    .card a:hover {
+        text-decoration: underline;
+    }
+  </style>
+
+ </head>
+ <body>
+  <div class="container" role="main">
+   <h1>Buscador de Café del Angel</h1>
+   
+   <div class="search-input-group">
+     <label for="searchInput">Buscar tu café preferible:</label>
+     <input id="searchInput" type="text" placeholder="Ejemplo: Café Moca" aria-label="Buscar café" />
+     <button id="searchBtn" type="button">Buscar</button>
+   </div>
+
+   <section class="results" id="results" aria-live="polite" aria-atomic="true">
+        <!-- Contenido inicial (puedes borrarlo si prefieres empezar vacío) -->
+        <p>Inicia tu búsqueda para encontrar cafés y productos.</p>
+   </section>
+  </div>
 
   <script>
     const paginaPracticaUrl = "{% url 'pagina_practica' %}";
+    
+    // Lista de productos para la búsqueda
+    const productos = [
+      { 
+        nombre: "Café Moca Capuchino Instantáneo", 
+        descripcion: "Bolsitas de café instantáneo sabor capuchino moca, 8 x 0.63 oz", 
+        enlace: paginaPracticaUrl
+      },
+      { 
+        nombre: "Expreso Americano", 
+        descripcion: "Tienda virtual de café empacado y máquinas para amantes del café", 
+        enlace: paginaPracticaUrl
+      },
+      { 
+        nombre: "Café instantáneo Capuchino sabor moca", 
+        descripcion: "12 bolsas por caja, café con cafeína, tueste medio", 
+        enlace: paginaPracticaUrl
+      },
+      { 
+        nombre: "Café Irish", 
+        descripcion: "Delicioso café con licor Irish" , 
+        enlace: paginaPracticaUrl
+      },
+      { 
+        nombre: "Café Inglés", 
+        descripcion: "Sabor clásico inglés de café preparado",
+        enlace: paginaPracticaUrl
+      },
+      { 
+        nombre: "Café Australiano", 
+        descripcion: "Café con estilo australiano",
+        enlace: paginaPracticaUrl
+      },
+      { 
+        nombre: "Café Helado", 
+        descripcion: "Perfecto para disfrutar frío",
+        enlace: paginaPracticaUrl
+      }
+    ];
+
+    // --- TU LÓGICA DE BÚSQUEDA ---
+    const searchInput = document.getElementById('searchInput');
+    const searchBtn = document.getElementById('searchBtn');
+    const resultsContainer = document.getElementById('results');
+
+    function sanitizeString(str) {
+      return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+    }
+
+    function buscarCafe() {
+      const queryRaw = searchInput.value.trim();
+      if(queryRaw.length === 0) {
+        resultsContainer.innerHTML = '<p>Por favor, ingresa texto para buscar café.</p>';
+        return;
+      }
+      const query = sanitizeString(queryRaw);
+      const resultados = productos.filter(producto => 
+        sanitizeString(producto.nombre).includes(query) || 
+        sanitizeString(producto.descripcion).includes(query)
+      );
+
+      if(resultados.length === 0) {
+        resultsContainer.innerHTML = '<p>No se encontraron productos o cafés para tu búsqueda.</p>';
+        return;
+    }
+
+    resultsContainer.innerHTML = resultados.map(prod => `
+        <article class="card" role="article" tabindex="0">
+          <h3>${prod.nombre}</h3>
+        <p>${prod.descripcion}</p>
+          <a href="${prod.enlace}" target="_blank" rel="noopener">Ver más</a>
+      </article>
+    `).join('');
+    }
+
+    searchBtn.addEventListener('click', buscarCafe);
+    searchInput.addEventListener('keydown', function(e) {
+      if(e.key === 'Enter') {
+        buscarCafe();
+      }
+    });
+    
+    // Si quieres que se muestre todo al cargar, puedes llamar a buscarCafe() aquí con un valor vacío
+    // buscarCafe(); 
   </script>
-
-    <script>
-    const productos = [
-      { 
-        nombre: "Café Moca Capuchino Instantáneo", 
-        descripcion: "Bolsitas de café instantáneo sabor capuchino moca, 8 x 0.63 oz", 
-        enlace: paginaPracticaUrl // <-- 4. Usamos la variable de Django
-      },
-      { 
-        nombre: "Expreso Americano", 
-        descripcion: "Tienda virtual de café empacado y máquinas para amantes del café", 
-        enlace: paginaPracticaUrl // <-- 4. Usamos la variable de Django
-      },
-      { 
-        nombre: "Café instantáneo Capuchino sabor moca", 
-        descripcion: "12 bolsas por caja, café con cafeína, tueste medio", 
-        enlace: paginaPracticaUrl // <-- 4. Usamos la variable de Django
-      },
-      { 
-        nombre: "Café Irish", 
-        descripcion: "Delicioso café con licor Irish" , 
-        enlace: paginaPracticaUrl // <-- 4. Usamos la variable de Django
-      },
-      { 
-        nombre: "Café Inglés", 
-        descripcion: "Sabor clásico inglés de café preparado",
-        enlace: paginaPracticaUrl // <-- 4. Usamos la variable de Django
-      },
-      { 
-        nombre: "Café Australiano", 
-        descripcion: "Café con estilo australiano",
-        enlace: paginaPracticaUrl // <-- 4. Usamos la variable de Django
-      },
-      { 
-        nombre: "Café Helado", 
-        descripcion: "Perfecto para disfrutar frío",
-        enlace: paginaPracticaUrl // <-- 4. Usamos la variable de Django
-      }
-    ];
-
-    // --- TU LÓGICA DE BÚSQUEDA (ESTÁ PERFECTA, NO SE TOCA) ---
-    const searchInput = document.getElementById('searchInput');
-    const searchBtn = document.getElementById('searchBtn');
-    const resultsContainer = document.getElementById('results');
-
-    function sanitizeString(str) {
-      return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
-    }
-
-    function buscarCafe() {
-      const queryRaw = searchInput.value.trim();
-      if(queryRaw.length === 0) {
-        resultsContainer.innerHTML = '<p>Por favor, ingresa texto para buscar café.</p>';
-        return;
-      }
-      const query = sanitizeString(queryRaw);
-      const resultados = productos.filter(producto => 
-  	    sanitizeString(producto.nombre).includes(query) || 
-  	    sanitizeString(producto.descripcion).includes(query)
-      );
-
-      if(resultados.length === 0) {
-      	resultsContainer.innerHTML = '<p>No se encontraron productos o cafés para tu búsqueda.</p>';
-      	return;
-  	}
-
-  	resultsContainer.innerHTML = resultados.map(prod => `
-        <article class="card" role="article" tabindex="0">
-          <h3>${prod.nombre}</h3>
-  	    <p>${prod.descripcion}</p>
-            	    <a href="${prod.enlace}" target="_blank" rel="noopener">Ver más</a>
-  	  </article>
-  	`).join('');
-  	}
-
-  	searchBtn.addEventListener('click', buscarCafe);
-  	searchInput.addEventListener('keydown', function(e) {
-  	  if(e.key === 'Enter') {
-  	  	buscarCafe();
-  	  }
-  	});
-  </script>
-</body>
+ </body>
 </html>

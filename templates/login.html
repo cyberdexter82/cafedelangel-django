@@ -7,7 +7,6 @@
     <title>Café del Ángel</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}"/>
     
-    <!-- Estilos para el nuevo formulario de Django -->
     <style>
         .django-form p {
             margin-bottom: 15px;
@@ -57,14 +56,14 @@
             background-color: #d4edda; /* Fondo verde claro */
             color: #155724; /* Verde oscuro */
             border: 1px solid #c3e6cb;
+            list-style: none; /* Asegúrate que no salgan viñetas */
         }
     </style>
-    <!-- Ya no necesitamos el <script> con la función login() -->
 </head>
 <body>
     <section class="relative">
         <img alt="Cafe"
-             src="{% static 'Images/cafe1.png' %}" />
+             src="{% static 'images/cafe1.png' %}" />
         <header>
             <h1 class="container"></h1>
             <h1 class="container">Bienvenido al Inicio de Sesion</h1>
@@ -73,7 +72,6 @@
 
     <div class="container">
 
-        <!-- 1. Mostrar mensajes (ej: "¡Registro exitoso!") -->
         {% if messages %}
             <ul class="messages">
                 {% for message in messages %}
@@ -82,7 +80,6 @@
             </ul>
         {% endif %}
 
-        <!-- 2. Mostrar errores de login (ej: "Contraseña incorrecta") -->
         {% if form.non_field_errors %}
             <ul class="form-errors">
                 {% for error in form.non_field_errors %}
@@ -92,12 +89,9 @@
         {% endif %}
 
 
-        <!-- 3. Formulario de Login REAL -->
         <form method="post" action="{% url 'login' %}" class="django-form" novalidate>
-            <!-- Token de seguridad de Django -->
             {% csrf_token %}
             
-            <!-- Django renderizará los campos 'Username' y 'Password' -->
             {{ form.as_p }}
             
             <button type="submit">Entrar</button>

@@ -8,7 +8,6 @@
     <title>Reseñas - Cafe del Angel</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="{% static 'css/style.css' %}" />
-    <!-- 👇 --- AÑADIDO: FontAwesome para los iconos de la barra --- 👇 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
     
     <script>
@@ -16,13 +15,11 @@
             theme: {
                 extend: {
                     colors: {
-                        // Colores de la página de reseñas
                         'coffee-dark': '#4A2312',
                         'coffee-light': '#D2B48C',
                         'coffee-accent': '#6F4E37',
                         'background-light': '#F5F5DC',
                         
-                        // Colores de la barra de navegación (añadidos)
                         'brown-500': '#6F4E37',
                         'brown-700': '#4A2312',
                     }
@@ -34,7 +31,6 @@
 
 <body class="bg-background-light min-h-screen">
 
-    <!-- 👇 --- AÑADIDO: BARRA DE NAVEGACIÓN COMPLETA --- 👇 -->
     <header class="bg-gray-50 text-xs py-2 border-b border-gray-200">
         <div class="container mx-auto px-4 flex justify-between items-center max-w-6xl">
             <div class="flex items-center gap-2 text-gray-600">
@@ -51,13 +47,11 @@
     <nav class="py-4 shadow-md bg-white">
         <div class="container mx-auto px-4 flex justify-between items-center max-w-6xl">
             <div class="flex items-center gap-8">
-                <img alt="Logo Cafe del Angel" src="{% static 'Images/iconocafe1.png' %}" class="w-10 h-10 object-contain" />
+                <img alt="Logo Cafe del Angel" src="{% static 'images/iconocafe1.png' %}" class="w-10 h-10 object-contain" />
                 <div class="hidden md:flex gap-6 text-sm font-medium text-gray-700">
-                    <!-- Lógica de navegación dinámica -->
                     {% if user.is_authenticated %}
                         <a href="{% url 'pagina_practica' %}" class="hover:text-brown-500">INICIO</a>
                         <a href="{% url 'acerca' %}" class="hover:text-brown-500">MÁS</a>
-                        <!-- Marcamos "RESEÑAS" como la página activa -->
                         <a href="{% url 'resenas' %}" class="text-brown-500 font-bold">RESEÑAS</a>
                         <a href="{% url 'autores' %}" class="hover:text-brown-500">INTEGRANTES</a>
                     {% else %}
@@ -67,7 +61,6 @@
                 </div>
             </div>
             <div class="flex items-center gap-4">
-                <!-- Saludo al usuario y botón de Logout -->
                 {% if user.is_authenticated %}
                     <span class="text-sm text-gray-600">¡Hola, <strong>{{ user.username }}</strong>!</span>
                     <a href="{% url 'logout' %}" class="text-sm font-medium text-red-600 hover:text-red-800">CERRAR SESIÓN</a>
@@ -75,26 +68,68 @@
             </div>
         </div>
     </nav>
-    <!-- --- FIN DE BARRA DE NAVEGACIÓN --- -->
 
-
-    <!-- Tu contenido original de "Reseñas" -->
     <div class="max-w-4xl mx-auto p-6 lg:p-10">
 
         <h2 class="text-3xl font-extrabold text-center text-coffee-dark mb-8">Nuestras Experiencias</h2>
         
+        {% if user.is_authenticated %}
+        <div class="bg-white rounded-xl shadow-lg p-6 mb-8 border-l-4 border-coffee-accent">
+            <h3 class="text-2xl font-bold text-coffee-dark mb-4">Deja tu Reseña</h3>
+            <form method="post" enctype="multipart/form-data" action="{% url 'dejar_resena' %}" class="space-y-4">
+                {% csrf_token %}
+                
+                {# Aquí iría el formulario de reseña que crearías en forms.py #}
+                {# Ejemplo: {{ review_form.as_p }} #}
+                <p>
+                    <label for="id_rating" class="block text-gray-700 font-medium">Calificación:</label>
+                    <select name="rating" id="id_rating" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-coffee-accent focus:border-coffee-accent sm:text-sm p-2">
+                        <option value="5">⭐⭐⭐⭐⭐</option>
+                        <option value="4">⭐⭐⭐⭐</option>
+                        <option value="3">⭐⭐⭐</option>
+                        <option value="2">⭐⭐</option>
+                        <option value="1">⭐</option>
+                    </select>
+                </p>
+                <p>
+                    <label for="id_comment" class="block text-gray-700 font-medium">Tu Comentario:</label>
+                    <textarea name="comment" id="id_comment" rows="4" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-coffee-accent focus:border-coffee-accent sm:text-sm p-2"></textarea>
+                </p>
+                {# Si quieres permitir subir una imagen con la reseña, descomenta esto (necesita form.image_field) #}
+                {# <p>
+                    <label for="id_review_image" class="block text-gray-700 font-medium">Subir Imagen (Opcional):</label>
+                    <input type="file" name="review_image" id="id_review_image" class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-coffee-light file:text-coffee-dark hover:file:bg-coffee-accent hover:file:text-white"/>
+                </p> #}
+
+                <button type="submit" class="w-full bg-coffee-dark text-white font-semibold py-3 rounded-lg hover:bg-coffee-accent transition duration-200 shadow-md">
+                    Enviar Reseña
+                </button>
+            </form>
+        </div>
+        {% else %}
+        <div class="bg-white rounded-xl shadow-lg p-6 mb-8 text-center text-gray-600 border-l-4 border-coffee-light">
+            <p>Por favor <a href="{% url 'login' %}" class="text-coffee-accent hover:underline font-bold">inicia sesión</a> para dejar tu reseña.</p>
+        </div>
+        {% endif %}
         <div class="grid gap-8 sm:grid-cols-1 md:grid-cols-2">
 
             <div class="bg-white rounded-xl shadow-2xl overflow-hidden transform hover:scale-[1.02] transition duration-300 ease-in-out border-4 border-coffee-accent">
-                
                 <img alt="Reseña1 de Julieta Velgara"
-                     src="{% static 'Images/reseña.png' %}"
+                     src="{% static 'images/reseña.png' %}"
                      class="w-full h-56 object-cover border-b-4 border-coffee-accent"
                      loading="lazy" />
                 
                 <div class="p-6">
-                    <h3 class="text-2xl font-bold text-coffee-dark mb-1">Julieta Velgara</h3>
+                    <div class="flex items-center mb-3">
+                        {# Aquí puedes mostrar el avatar del usuario si lo tienes en el modelo Review #}
+                        {# Ejemplo: <img src="{{ review.user.profile.avatar.url }}" class="w-12 h-12 rounded-full object-cover mr-4" alt="Avatar"> #}
+                        <h3 class="text-2xl font-bold text-coffee-dark">Julieta Velgara</h3>
+                    </div>
                     <p class="text-gray-500 text-sm italic mb-4">02 Diciembre 2023</p>
+                    <div class="flex items-center text-yellow-500 mb-4">
+                        {# Aquí podrías mostrar el rating real de la reseña, ej: {% for _ in review.rating %}<i class="fas fa-star"></i>{% endfor %} #}
+                        ⭐⭐⭐⭐⭐
+                    </div>
                     <p class="text-gray-700 mb-6 border-l-4 border-coffee-light pl-3">
                         "Mis amigas y yo vamos cada fin de semana a la cafetería y siempre nos reciben con un gran carisma, recomendado."
                     </p>
@@ -108,15 +143,22 @@
             </div>
 
             <div class="bg-white rounded-xl shadow-2xl overflow-hidden transform hover:scale-[1.02] transition duration-300 ease-in-out border-4 border-coffee-accent">
-                
                 <img alt="Reseña2 de Castillo Lopez 359"
-                     src="{% static 'Images/reseña2.png' %}"
+                     src="{% static 'images/reseña2.png' %}"
                      class="w-full h-56 object-cover border-b-4 border-coffee-accent"
                      loading="lazy" />
                 
                 <div class="p-6">
-                    <h3 class="text-2xl font-bold text-coffee-dark mb-1">Castillo Lopez 359</h3>
+                    <div class="flex items-center mb-3">
+                        {# Aquí puedes mostrar el avatar del usuario si lo tienes en el modelo Review #}
+                        {# Ejemplo: <img src="{{ review.user.profile.avatar.url }}" class="w-12 h-12 rounded-full object-cover mr-4" alt="Avatar"> #}
+                        <h3 class="text-2xl font-bold text-coffee-dark">Castillo Lopez 359</h3>
+                    </div>
                     <p class="text-gray-500 text-sm italic mb-4">29 Noviembre 2022</p>
+                    <div class="flex items-center text-yellow-500 mb-4">
+                        {# Aquí podrías mostrar el rating real de la reseña, ej: {% for _ in review.rating %}<i class="fas fa-star"></i>{% endfor %} #}
+                        ⭐⭐⭐⭐⭐
+                    </div>
                     <p class="text-gray-700 mb-6 border-l-4 border-coffee-light pl-3">
                         "Recomiendo este lugar ya que aquí llevé a mi novia a proponerle matrimonio y el servicio de los empleados estuvo de lujo y la atención de los clientes."
                     </p>
@@ -128,6 +170,38 @@
                     </a>
                 </div>
             </div>
+
+            {# {% for review in reviews %}
+                <div class="bg-white rounded-xl shadow-2xl overflow-hidden transform hover:scale-[1.02] transition duration-300 ease-in-out border-4 border-coffee-accent">
+                    <div class="p-6">
+                        <div class="flex items-center mb-3">
+                            {% if review.user.profile.avatar %}
+                                <img src="{{ review.user.profile.avatar.url }}" class="w-12 h-12 rounded-full object-cover mr-4" alt="{{ review.user.username }}'s avatar">
+                            {% else %}
+                                <img src="{% static 'images/default_avatar.png' %}" class="w-12 h-12 rounded-full object-cover mr-4" alt="Default avatar">
+                            {% endif %}
+                            <h3 class="text-2xl font-bold text-coffee-dark">{{ review.user.username }}</h3>
+                        </div>
+                        <p class="text-gray-500 text-sm italic mb-4">{{ review.created_at|date:"d M Y" }}</p>
+                        <div class="flex items-center text-yellow-500 mb-4">
+                            {% for _ in review.rating|times:"1" %}
+                                <i class="fas fa-star"></i>
+                            {% endfor %}
+                            {% for _ in review.rating|add:"-5"|abs|times:"1" %}
+                                <i class="far fa-star"></i> {# O una estrella gris si no alcanza el máximo #}
+                            {% endfor %}
+                        </div>
+                        <p class="text-gray-700 mb-6 border-l-4 border-coffee-light pl-3">
+                            "{{ review.comment }}"
+                        </p>
+                        {% if review.image %}
+                            <img src="{{ review.image.url }}" alt="Imagen de reseña" class="w-full h-48 object-cover rounded-md mt-4">
+                        {% endif %}
+                    </div>
+                </div>
+            {% empty %}
+                <p class="col-span-2 text-center text-gray-600">Aún no hay reseñas. ¡Sé el primero en dejar una!</p>
+            {% endfor %} #}
 
         </div>
     </div>

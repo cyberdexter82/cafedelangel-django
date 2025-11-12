@@ -1,38 +1,77 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Página no encontrada</title>
-  <style>
-    body {
-      background-color: #f2f2f2;
-      font-family: 'Times New Roman', Times, serif;
-      text-align: center;
-      padding: 100px;
-    }
-    h1 {
-      font-size: 80px;
-      margin-bottom: 20px;
-      color: #ff6b6b;
-    }
-    p {
-      font-size: 24px;
-      color: #333;
-    }
-    a {
-      display: inline-block;
-      margin-top: 20px;
-      font-size: 18px;
-      color: #007bff;
-      text-decoration: none;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página no encontrada</title>
     
-  </style>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&amp;display=swap" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+
+    <style>
+        body {
+            background-color: #f7f7f7;
+            font-family: 'Montserrat', sans-serif;
+            text-align: center;
+            padding: 50px 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .error-container {
+            background: white;
+            padding: 40px 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 100%;
+        }
+        h1 {
+            font-size: 80px;
+            margin-bottom: 0px;
+            color: #4A2312; /* Café oscuro */
+            font-weight: 700;
+        }
+        .error-text {
+            font-size: 24px;
+            color: #6F4E37; /* Café principal */
+            margin-bottom: 30px;
+        }
+        .error-message {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 25px;
+        }
+        a {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 18px;
+            background-color: #D4A373; /* Tostado de acento */
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: background-color 0.2s;
+        }
+        a:hover {
+            background-color: #B45309;
+        }
+    </style>
 </head>
 <body>
-  <h1>404</h1>
-  <p>¡Ups! La pagina no existe, por favor busca una solucion.</p>
-  <a href="index.html">Volver al inicio</a>
+    <div class="error-container">
+        <h1>
+            <i class="fas fa-mug-empty" style="font-size: 60px; margin-right: 10px;"></i>
+            404
+        </h1>
+        <p class="error-text">¡Página no encontrada!</p>
+        <p class="error-message">Parece que te has desviado del camino hacia el café. Por favor, vuelve a la página principal.</p>
+        
+        <!-- CORRECCIÓN CLAVE: Usamos el nombre de URL de Django 'inicio' -->
+        <a href="{% url 'inicio' %}">Volver a la Cafetería</a>
+    </div>
 </body>
 </html>
