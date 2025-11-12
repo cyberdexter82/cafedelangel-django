@@ -1,0 +1,105 @@
+{% load static %} <!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+<title>Buscador de Café</title>
+    <link href="{% static 'css/style2.css' %}" rel="stylesheet" />
+
+</head>
+<body>
+  <div class="container" role="main">
+    <h1>Buscador de Café del Angel</h1>
+    <label for="searchInput">Buscar tu café preferible:</label>
+    <input id="searchInput" type="text" placeholder="Ejemplo: Café Moca" aria-label="Buscar café" />
+    <button id="searchBtn" type="button">Buscar</button>
+    <section class="results" id="results" aria-live="polite" aria-atomic="true"></section>
+  </div>
+
+  <script>
+    const paginaPracticaUrl = "{% url 'pagina_practica' %}";
+  </script>
+
+    <script>
+    const productos = [
+      { 
+        nombre: "Café Moca Capuchino Instantáneo", 
+        descripcion: "Bolsitas de café instantáneo sabor capuchino moca, 8 x 0.63 oz", 
+        enlace: paginaPracticaUrl // <-- 4. Usamos la variable de Django
+      },
+      { 
+        nombre: "Expreso Americano", 
+        descripcion: "Tienda virtual de café empacado y máquinas para amantes del café", 
+        enlace: paginaPracticaUrl // <-- 4. Usamos la variable de Django
+      },
+      { 
+        nombre: "Café instantáneo Capuchino sabor moca", 
+        descripcion: "12 bolsas por caja, café con cafeína, tueste medio", 
+        enlace: paginaPracticaUrl // <-- 4. Usamos la variable de Django
+      },
+      { 
+        nombre: "Café Irish", 
+        descripcion: "Delicioso café con licor Irish" , 
+        enlace: paginaPracticaUrl // <-- 4. Usamos la variable de Django
+      },
+      { 
+        nombre: "Café Inglés", 
+        descripcion: "Sabor clásico inglés de café preparado",
+        enlace: paginaPracticaUrl // <-- 4. Usamos la variable de Django
+      },
+      { 
+        nombre: "Café Australiano", 
+        descripcion: "Café con estilo australiano",
+        enlace: paginaPracticaUrl // <-- 4. Usamos la variable de Django
+      },
+      { 
+        nombre: "Café Helado", 
+        descripcion: "Perfecto para disfrutar frío",
+        enlace: paginaPracticaUrl // <-- 4. Usamos la variable de Django
+      }
+    ];
+
+    // --- TU LÓGICA DE BÚSQUEDA (ESTÁ PERFECTA, NO SE TOCA) ---
+    const searchInput = document.getElementById('searchInput');
+    const searchBtn = document.getElementById('searchBtn');
+    const resultsContainer = document.getElementById('results');
+
+    function sanitizeString(str) {
+      return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+    }
+
+    function buscarCafe() {
+      const queryRaw = searchInput.value.trim();
+      if(queryRaw.length === 0) {
+        resultsContainer.innerHTML = '<p>Por favor, ingresa texto para buscar café.</p>';
+        return;
+      }
+      const query = sanitizeString(queryRaw);
+      const resultados = productos.filter(producto => 
+  	    sanitizeString(producto.nombre).includes(query) || 
+  	    sanitizeString(producto.descripcion).includes(query)
+      );
+
+      if(resultados.length === 0) {
+      	resultsContainer.innerHTML = '<p>No se encontraron productos o cafés para tu búsqueda.</p>';
+      	return;
+  	}
+
+  	resultsContainer.innerHTML = resultados.map(prod => `
+        <article class="card" role="article" tabindex="0">
+          <h3>${prod.nombre}</h3>
+  	    <p>${prod.descripcion}</p>
+            	    <a href="${prod.enlace}" target="_blank" rel="noopener">Ver más</a>
+  	  </article>
+  	`).join('');
+  	}
+
+  	searchBtn.addEventListener('click', buscarCafe);
+  	searchInput.addEventListener('keydown', function(e) {
+  	  if(e.key === 'Enter') {
+  	  	buscarCafe();
+  	  }
+  	});
+  </script>
+</body>
+</html>

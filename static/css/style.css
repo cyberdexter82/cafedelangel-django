@@ -1,0 +1,292 @@
+
+    body {
+      font-family: Arial, sans-serif;
+    }
+    header, nav {
+      background: white;
+    }
+    .text-brown-500 {
+      color: #6b4f4f;
+    }
+    .categoria {
+      position: relative;
+      margin: 0 12px;
+    }
+    .categoria img {
+      border-radius: 0.5rem;
+      display: block;
+      width: 180px;
+      height: 120px;
+      object-fit: cover;
+    }
+    .categoria .absolute {
+      position: relative;
+      margin-top: 0.5rem;
+      text-align: center;
+    }
+    .categoria .absolute h2 {
+      font-weight: 600;
+      font-size: 0.75rem;
+      margin-bottom: 0.25rem;
+    }
+    .categoria .absolute button {
+      background-color: #6b4f4f;
+      color: white;
+      font-size: 0.625rem;
+      padding: 2px 6px;
+      border-radius: 0.25rem;
+      cursor: pointer;
+    }
+    section.relative > img {
+      width: 100%;
+      height: 150px;
+      object-fit: cover;
+    }
+    section.relative > div.absolute {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 150px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      font-weight: 700;
+      font-size: 1.25rem;
+      text-shadow: 0 0 5px rgba(0,0,0,0.7);
+    }
+    button {
+      background-color: #6b4f4f;
+      color: white;
+      font-size: 0.625rem;
+      padding: 2px 6px;
+      border-radius: 0.25rem;
+      cursor: pointer;
+      border: none;
+    }
+    button:focus {
+      outline: none;
+    }
+    footer {
+      background: linear-gradient(to bottom, #d49c4f, #6b4f4f);
+      color: white;
+      font-size: 0.625rem;
+      padding: 1rem;
+      border-radius: 0.375rem;
+      max-width: 700px;
+      margin: 0 auto 2rem auto;
+    }
+    footer h3 {
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      font-size: 0.75rem;
+    }
+    footer p {
+      margin: 0.125rem 0;
+    }
+    footer .flex a {
+      color: white;
+      font-size: 1.25rem;
+      margin-top: 0.5rem;
+      display: inline-block;
+    }
+    .container {
+      max-width: 1200px;
+      margin-left: auto;
+      margin-right: auto;
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+    header .container,
+    nav .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.5rem 0;
+      font-size: 0.875rem;
+      color: #6b4f4f;
+    }
+    nav .container a {
+      margin-left: 1rem;
+      font-weight: 600;
+      color: #6b4f4f;
+      text-decoration: none;
+      font-size: 0.875rem;
+    }
+    nav .container a:hover {
+      text-decoration: underline;
+    }
+    nav .container img {
+      height: 40px;
+      width: auto;
+    }
+    nav .container input[type="text"] {
+      border: 1px solid #ccc;
+      border-radius: 0.25rem 0 0 0.25rem;
+      padding: 0.25rem 0.5rem;
+      font-size: 0.875rem;
+      width: 150px;
+    }
+    nav .container button {
+      border-radius: 0 0.25rem 0.25rem 0;
+      padding: 0.25rem 0.5rem;
+      background-color: #6b4f4f;
+      border: none;
+      color: white;
+      cursor: pointer;
+    }
+    nav .container button i {
+      font-size: 1rem;
+    }
+    section.bg-gray-100 {
+      background-color: #f8fbfd;
+      padding: 2rem 0;
+    }
+    section.bg-gray-100 .container {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 1rem;
+    }
+    section.bg-gray-100 .flex {
+      display: flex;
+      gap: 0.75rem;
+      align-items: flex-start;
+      background: white;
+      padding: 1rem;
+      border-radius: 0.375rem;
+      box-shadow: 0 1px 3px rgb(0 0 0 / 0.1);
+    }
+    section.bg-gray-100 i {
+      font-size: 1.5rem;
+      color: #6b4f4f;
+      margin-top: 0.25rem;
+      min-width: 24px;
+      text-align: center;
+    }
+    h1.text-3xl {
+      font-size: 1.875rem;
+      font-weight: 700;
+      margin-bottom: 2rem;
+      color: #000;
+    }
+    .flex.justify-center.mb-8 {
+      justify-content: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .grid.md\:grid-cols-2.lg\:grid-cols-4.gap-4 {
+      display: grid;
+      grid-template-columns: repeat(1, minmax(0, 1fr));
+      gap: 1rem;
+    }
+    @media (min-width: 768px) {
+      .grid.md\:grid-cols-2.lg\:grid-cols-4.gap-4 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+    @media (min-width: 1024px) {
+      .grid.md\:grid-cols-2.lg\:grid-cols-4.gap-4 {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+    }
+    .bg-white {
+      background: white;
+    }
+    .p-4 {
+      padding: 1rem;
+    }
+    .rounded-lg {
+      border-radius: 0.5rem;
+    }
+    .shadow {
+      box-shadow: 0 1px 3px rgb(0 0 0 / 0.1);
+    }
+    .relative {
+      position: relative;
+    }
+    .text-center {
+      text-align: center;
+    }
+    .font-semibold {
+      font-weight: 600;
+    }
+    .mb-2 {
+      margin-bottom: 0.5rem;
+    }
+    .text-lg {
+      font-size: 1.125rem;
+    }
+    .font-bold {
+      font-weight: 700;
+    }
+    .text-gray-500 {
+      color: #6b7280;
+    }
+    .line-through {
+      text-decoration: line-through;
+    }
+    .mt-4 {
+      margin-top: 1rem;
+    }
+    .w-full {
+      width: 100%;
+    }
+    button i {
+      font-style: normal;
+      margin-left: 0.25rem;
+    }
+    .flex.justify-center.mb-2 i {
+      color: #6b4f4f;
+      margin: 0 2px;
+    }
+    .text-gray-300 {
+      color: #d1d5db;
+    }
+
+
+  .fb-button {
+    background-color: #1877F2;
+    border: none;
+    color: white;
+    padding: 1.2em 2.2em;
+    font-size: 1.2rem;
+    font-weight: 700;
+    border-radius: 12px;
+    cursor: pointer;
+    box-shadow: 0 6px 15px rgba(24, 119, 242, 0.65);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+  }
+  .fb-button:hover,
+  .fb-button:focus {
+    background-color: #145dbf;
+    box-shadow: 0 8px 20px rgba(20, 93, 191, 0.9);
+    outline: none;
+  }
+  .fb-icon {
+    margin-right: 12px;
+    display: inline-block;
+  }
+  .fb-icon svg {
+    fill: white;
+    width: 24px;
+    height: 24px;
+  }
+  /* Responsive adjustments for small screens */
+  @media (max-width: 360px) {
+    .fb-button {
+      font-size: 1rem;
+      padding: 1em 1.6em;
+      border-radius: 10px;
+    }
+    .fb-icon svg {
+      width: 20px;
+      height: 20px;
+    }
+  }
+
+

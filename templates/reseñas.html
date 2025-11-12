@@ -1,0 +1,135 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reseñas - Cafe del Angel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+    <!-- 👇 --- AÑADIDO: FontAwesome para los iconos de la barra --- 👇 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        // Colores de la página de reseñas
+                        'coffee-dark': '#4A2312',
+                        'coffee-light': '#D2B48C',
+                        'coffee-accent': '#6F4E37',
+                        'background-light': '#F5F5DC',
+                        
+                        // Colores de la barra de navegación (añadidos)
+                        'brown-500': '#6F4E37',
+                        'brown-700': '#4A2312',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="bg-background-light min-h-screen">
+
+    <!-- 👇 --- AÑADIDO: BARRA DE NAVEGACIÓN COMPLETA --- 👇 -->
+    <header class="bg-gray-50 text-xs py-2 border-b border-gray-200">
+        <div class="container mx-auto px-4 flex justify-between items-center max-w-6xl">
+            <div class="flex items-center gap-2 text-gray-600">
+                <i class="fas fa-headset text-brown-500"></i>
+                <span>Soporte al cliente 831-177-5372</span>
+            </div>
+            <div class="flex items-center gap-2 text-gray-600">
+                <i class="fas fa-shopping-cart text-brown-500"></i>
+                <span>Shopping (0)</span>
+            </div>
+        </div>
+    </header>
+    
+    <nav class="py-4 shadow-md bg-white">
+        <div class="container mx-auto px-4 flex justify-between items-center max-w-6xl">
+            <div class="flex items-center gap-8">
+                <img alt="Logo Cafe del Angel" src="{% static 'Images/iconocafe1.png' %}" class="w-10 h-10 object-contain" />
+                <div class="hidden md:flex gap-6 text-sm font-medium text-gray-700">
+                    <!-- Lógica de navegación dinámica -->
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'pagina_practica' %}" class="hover:text-brown-500">INICIO</a>
+                        <a href="{% url 'acerca' %}" class="hover:text-brown-500">MÁS</a>
+                        <!-- Marcamos "RESEÑAS" como la página activa -->
+                        <a href="{% url 'resenas' %}" class="text-brown-500 font-bold">RESEÑAS</a>
+                        <a href="{% url 'autores' %}" class="hover:text-brown-500">INTEGRANTES</a>
+                    {% else %}
+                        <a href="{% url 'login' %}" class="hover:text-brown-500">INICIAR SESIÓN</a>
+                        <a href="{% url 'registro' %}" class="hover:text-brown-500">REGISTRO</a>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="flex items-center gap-4">
+                <!-- Saludo al usuario y botón de Logout -->
+                {% if user.is_authenticated %}
+                    <span class="text-sm text-gray-600">¡Hola, <strong>{{ user.username }}</strong>!</span>
+                    <a href="{% url 'logout' %}" class="text-sm font-medium text-red-600 hover:text-red-800">CERRAR SESIÓN</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+    <!-- --- FIN DE BARRA DE NAVEGACIÓN --- -->
+
+
+    <!-- Tu contenido original de "Reseñas" -->
+    <div class="max-w-4xl mx-auto p-6 lg:p-10">
+
+        <h2 class="text-3xl font-extrabold text-center text-coffee-dark mb-8">Nuestras Experiencias</h2>
+        
+        <div class="grid gap-8 sm:grid-cols-1 md:grid-cols-2">
+
+            <div class="bg-white rounded-xl shadow-2xl overflow-hidden transform hover:scale-[1.02] transition duration-300 ease-in-out border-4 border-coffee-accent">
+                
+                <img alt="Reseña1 de Julieta Velgara"
+                     src="{% static 'Images/reseña.png' %}"
+                     class="w-full h-56 object-cover border-b-4 border-coffee-accent"
+                     loading="lazy" />
+                
+                <div class="p-6">
+                    <h3 class="text-2xl font-bold text-coffee-dark mb-1">Julieta Velgara</h3>
+                    <p class="text-gray-500 text-sm italic mb-4">02 Diciembre 2023</p>
+                    <p class="text-gray-700 mb-6 border-l-4 border-coffee-light pl-3">
+                        "Mis amigas y yo vamos cada fin de semana a la cafetería y siempre nos reciben con un gran carisma, recomendado."
+                    </p>
+                    
+                    <a href="https://www.facebook.com/cafeteriadelangel/" target="_blank" class="block">
+                        <button class="w-full bg-coffee-dark text-white font-semibold py-3 rounded-lg hover:bg-coffee-accent transition duration-200 shadow-md">
+                            LEER MÁS EN FACEBOOK
+                        </button>
+                    </a>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-2xl overflow-hidden transform hover:scale-[1.02] transition duration-300 ease-in-out border-4 border-coffee-accent">
+                
+                <img alt="Reseña2 de Castillo Lopez 359"
+                     src="{% static 'Images/reseña2.png' %}"
+                     class="w-full h-56 object-cover border-b-4 border-coffee-accent"
+                     loading="lazy" />
+                
+                <div class="p-6">
+                    <h3 class="text-2xl font-bold text-coffee-dark mb-1">Castillo Lopez 359</h3>
+                    <p class="text-gray-500 text-sm italic mb-4">29 Noviembre 2022</p>
+                    <p class="text-gray-700 mb-6 border-l-4 border-coffee-light pl-3">
+                        "Recomiendo este lugar ya que aquí llevé a mi novia a proponerle matrimonio y el servicio de los empleados estuvo de lujo y la atención de los clientes."
+                    </p>
+                    
+                    <a href="https://www.facebook.com/cafeteriadelangel/" target="_blank" class="block">
+                        <button class="w-full bg-coffee-dark text-white font-semibold py-3 rounded-lg hover:bg-coffee-accent transition duration-200 shadow-md">
+                            LEER MÁS EN FACEBOOK
+                        </button>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</body>
+</html>

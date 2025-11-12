@@ -1,0 +1,350 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1" name="viewport"/>
+  <title>
+   Comprar Café - Café del Ángel
+  </title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&amp;display=swap" rel="stylesheet"/>
+  <link href="{% static 'css/style.css' %}" rel="stylesheet"/>
+
+  <script>
+    // Configuración de colores de café para Tailwind
+    tailwind.config = {
+        theme: {
+            extend: {
+                colors: {
+                    'brown-main': '#6b4f4f', // Café principal
+                    'brown-dark': '#4a2312', // Café muy oscuro
+                    'yellow-accent': '#d4a373', // Tostado de acento
+                }
+            }
+        }
+    }
+  </script>
+
+  <style>
+    /* Estilos del Botón de Compra */
+    .btn-buy {
+        background-color: var(--yellow-accent);
+        color: white;
+        padding: 8px 16px;
+        border-radius: 6px;
+        font-weight: 600;
+        transition: background-color 0.2s;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .btn-buy:hover {
+        background-color: #c08c62;
+    }
+
+    /* Estilos del Carrito (Dropdown) */
+    .cart-dropdown-container {
+        position: fixed;
+        top: 1rem;
+        right: 1rem;
+        z-index: 1000;
+    }
+    .cart-btn {
+        background-color: var(--brown-main);
+        color: #c08c62;
+        padding: 10px 15px;
+        border-radius: 9999px; /* Píldora */
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        transition: background-color 0.2s;
+    }
+    .cart-btn:hover {
+        background-color: var(--brown-dark);
+    }
+    .cart-dropdown {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        width: 250px;
+        margin-top: 10px;
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        z-index: 999;
+        overflow: hidden;
+        border: 1px solid #eee;
+    }
+    .cart-dropdown.hidden {
+        display: none;
+    }
+    .cart-item {
+        padding: 10px 15px;
+        border-bottom: 1px dashed #c08c62;
+        font-size: 0.9em;
+        display: flex;
+        justify-content: space-between;
+    }
+    .cart-item:last-child {
+        border-bottom: none;
+    }
+    .cart-empty-message {
+        padding: 15px;
+        color: #888;
+        font-style: italic;
+    }
+    .cart-actions a {
+        display: block;
+        padding: 10px;
+        text-align: center;
+        background-color: #f7f7f7;
+        font-weight: 600;
+        color: var(--brown-main);
+        transition: background-color 0.2s;
+        text-decoration: none;
+        border-top: 1px solid #eee;
+    }
+    .cart-actions a:hover {
+        background-color: #eee;
+    }
+    
+    /* Estilos del Modal (Mensaje de Advertencia y Éxito) */
+    .modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(5px);
+        z-index: 1000;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: opacity 0.3s ease;
+    }
+    .modal.hidden {
+        opacity: 0;
+        pointer-events: none;
+    }
+    .modal-content {
+        background: white;
+        padding: 40px;
+        border-radius: 12px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        max-width: 400px;
+        width: 90%;
+        text-align: center;
+        transform: scale(0.9);
+        transition: transform 0.3s ease;
+    }
+    .modal:not(.hidden) .modal-content {
+        transform: scale(1);
+    }
+    .modal-title {
+        color: var(--brown-dark);
+        font-size: 1.8em;
+        font-weight: 700;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .modal-message {
+        color: #555;
+        font-size: 1.1em;
+        margin-bottom: 25px;
+    }
+    .modal-close {
+        background-color: var(--brown-main);
+        color: white;
+        padding: 10px 25px;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: background-color 0.2s;
+    }
+    .modal-close:hover {
+        background-color: var(--brown-dark);
+    }
+  </style>
+ </head>
+ <body class="bg-gray-50 text-gray-900">
+
+  <div class="cart-dropdown-container">
+    <button class="cart-btn" id="cart-button">
+        <i class="fas fa-shopping-cart mr-2"></i>
+        <span class="font-bold text-lg" id="cart-counter">0</span>
+    </button>
+
+    <div class="cart-dropdown hidden" id="cart-dropdown-content">
+        <div id="cart-items-list">
+            <p class="cart-empty-message">El carrito está vacío. ¡Compra algo!</p>
+        </div>
+        <div class="cart-actions">
+            <a href="{% url 'pagina_practica' %}">Ir a Inicio</a>
+        </div>
+    </div>
+  </div>
+
+  <main class="max-w-md mx-auto p-6 pt-20">
+   <h1 class="text-3xl font-extrabold text-brown-dark mb-8 text-center">
+    Lista de Cafés
+   </h1>
+   <ul class="space-y-4">
+    <li class="flex justify-between items-center bg-white p-4 rounded shadow">
+     <span class="text-lg font-semibold">Café Moca</span>
+     <button class="btn-buy" data-product="Café Moca" type="button">Comprar</button>
+    </li>
+    <li class="flex justify-between items-center bg-white p-4 rounded shadow">
+     <span class="text-lg font-semibold">Expreso Americano</span>
+     <button class="btn-buy" data-product="Expreso Americano" type="button">Comprar</button>
+    </li>
+    <li class="flex justify-between items-center bg-white p-4 rounded shadow">
+     <span class="text-lg font-semibold">Capuchino</span>
+     <button class="btn-buy" data-product="Capuchino" type="button">Comprar</button>
+    </li>
+    <li class="flex justify-between items-center bg-white p-4 rounded shadow">
+     <span class="text-lg font-semibold">Cafe Irish</span>
+     <button class="btn-buy" data-product="Cafe Irish" type="button">Comprar</button>
+    </li>
+    <li class="flex justify-between items-center bg-white p-4 rounded shadow">
+     <span class="text-lg font-semibold">Cafe Inglés</span>
+     <button class="btn-buy" data-product="Cafe Inglés" type="button">Comprar</button>
+    </li>
+    <li class="flex justify-between items-center bg-white p-4 rounded shadow">
+     <span class="text-lg font-semibold">Cafe Australiano</span>
+     <button class="btn-buy" data-product="Cafe Australiano" type="button">Comprar</button>
+    </li>
+    <li class="flex justify-between items-center bg-white p-4 rounded shadow">
+     <span class="text-lg font-semibold">Cafe Helado</span>
+     <button class="btn-buy" data-product="Cafe Helado" type="button">Comprar</button>
+    </li>
+   </ul>
+  </main>
+
+  <div aria-hidden="true" class="modal hidden" id="modal">
+   <div class="modal-content">
+    <h3 class="modal-title" id="modal-title"></h3>
+    <p class="modal-message" id="modal-message"></p>
+    <button aria-label="Cerrar mensaje" class="modal-close" id="modal-close" type="button">
+     Entendido
+    </button>
+   </div>
+  </div>
+
+  <script>
+    // Usamos un array para almacenar los nombres de los productos
+    let cartItems = []; 
+
+    const buyButtons = document.querySelectorAll('.btn-buy');
+    const modal = document.getElementById('modal');
+    const modalTitle = document.getElementById('modal-title');
+    const modalMessage = document.getElementById('modal-message');
+    const modalClose = document.getElementById('modal-close');
+    const cartCounter = document.getElementById('cart-counter');
+    const cartButton = document.getElementById('cart-button');
+    const cartDropdown = document.getElementById('cart-dropdown-content');
+    const cartList = document.getElementById('cart-items-list');
+
+    // ===================================
+    // LÓGICA DEL CARRITO Y PINTADO DE LA LISTA
+    // ===================================
+
+    function updateCartDisplay() {
+        // 1. Actualiza el número en el ícono del carrito
+        cartCounter.textContent = cartItems.length;
+
+        // 2. Limpia la lista desplegable
+        cartList.innerHTML = ''; 
+
+        if (cartItems.length === 0) {
+            cartList.innerHTML = '<p class="cart-empty-message">El carrito está vacío. ¡Compra algo!</p>';
+        } else {
+            // 3. Pinta cada café en el menú desplegable
+            cartItems.forEach(item => {
+                const itemElement = document.createElement('div');
+                itemElement.className = 'cart-item';
+                itemElement.innerHTML = `<span><i class="fas fa-coffee mr-2 text-yellow-accent"></i> ${item}</span>`;
+                cartList.appendChild(itemElement);
+            });
+        }
+    }
+
+    // ===================================
+    // GESTIÓN DE MODALES
+    // ===================================
+
+    function showModal(title, message, isWarning = false) {
+        modalTitle.innerHTML = isWarning 
+            ? `<i class="fas fa-exclamation-triangle text-red-500 mr-3"></i> ${title}`
+            : `<i class="fas fa-mug-hot text-yellow-accent mr-3"></i> ${title}`;
+            
+        modalMessage.textContent = message;
+        
+        modal.classList.remove('hidden');
+        document.body.style.overflow = 'hidden'; 
+    }
+
+    // ===================================
+    // EVENT LISTENERS
+    // ===================================
+
+    // 1. EVENTO AL HACER CLIC EN "COMPRAR"
+    buyButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const productName = button.getAttribute('data-product');
+        
+        // Agrega el producto al array
+        cartItems.push(productName);
+        updateCartDisplay(); 
+
+        // Muestra modal de éxito
+        showModal('¡Compra Exitosa!', `El ${productName} ha sido añadido a tu pedido. Total: ${cartItems.length} cafés.`);
+      });
+    });
+
+    // 2. EVENTO AL HACER CLIC EN EL ÍCONO DEL CARRITO
+    cartButton.addEventListener('click', () => {
+        if (cartItems.length === 0) {
+            // Muestra modal de advertencia si el carrito está vacío
+            showModal('¡Carrito Vacío!', 'No se puede acceder al detalle de la compra si no ha añadido ningún producto. ¡No intente robar!', true);
+            cartDropdown.classList.add('hidden'); // Asegura que el dropdown esté cerrado
+        } else {
+            // Muestra/Oculta el menú desplegable
+            cartDropdown.classList.toggle('hidden');
+        }
+    });
+
+    // 3. EVENTOS PARA CERRAR MODAL
+    modalClose.addEventListener('click', () => {
+      modal.classList.add('hidden');
+      document.body.style.overflow = '';
+    });
+
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        modal.classList.add('hidden');
+        document.body.style.overflow = '';
+      }
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        // Cierra el modal si está abierto
+        if (!modal.classList.contains('hidden')) {
+          modal.classList.add('hidden');
+          document.body.style.overflow = '';
+        }
+        // Cierra el dropdown del carrito si está abierto
+        if (!cartDropdown.classList.contains('hidden')) {
+             cartDropdown.classList.add('hidden');
+        }
+      }
+    });
+
+    // Inicializa la vista del carrito
+    updateCartDisplay();
+  </script>
+ </body>
+</html>

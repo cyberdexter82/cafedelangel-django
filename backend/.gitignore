@@ -1,0 +1,30 @@
+Archivo: .gitignore
+# ------------------------------------------------------------
+# Este archivo le dice a Git qué ignorar al subir a GitHub/Azure.
+
+# 1. Entorno Virtual (CRÍTICO - NO DEBE SUBIRSE)
+.venv
+venv/
+
+# 2. Base de Datos Local y Archivos de Sesión
+db.sqlite3
+*.bak
+
+# 3. Archivos Subidos por el Usuario (CRÍTICO - Azure los maneja diferente)
+# Ignora todo lo que esté dentro de la carpeta media
+/media/*
+# Pero deja un archivo vacío para que la carpeta 'media' exista en GitHub
+!/media/.gitkeep
+
+# 4. Archivos de Python y Django
+__pycache__/
+*.pyc
+*.log
+*.pot
+*.mo
+*.egg-info
+.python-version
+
+# 5. Archivos de Sistema Operativo y Editores
+.DS_Store
+*.swp
