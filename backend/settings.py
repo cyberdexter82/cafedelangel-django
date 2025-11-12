@@ -19,14 +19,10 @@ TEMPLATES_DIR = os.path.join(BASE_DIR, 'templates')
 
 DEBUG = os.environ.get("DEBUG", "False").lower() == "true"
 
-# Usa la URL de tu app en Azure (ajústala si cambia el nombre)
-ALLOWED_HOSTS = [
-    "cafe-del-angel-tamps.azurewebsites.net",
-    "127.0.0.1",
-    "localhost",
-]
+# CAMBIO IMPORTANTE: El asterisco '*' permite entrar desde la URL larga de Azure
+ALLOWED_HOSTS = ["*"]
 
-# Clave secreta desde Azure (usa variable de entorno)
+# Clave secreta desde Azure (usa variable de entorno o la por defecto)
 SECRET_KEY = os.environ.get(
     "SECRET_KEY",
     "django-insecure-&+7ia!=_s&c!h8&7j$xh74)c^o(u9=!d5rob2f&%ciux=(z-2)"
@@ -134,4 +130,6 @@ LOGIN_URL = 'login'
 # 🔹 SEGURIDAD EXTRA (recomendado para producción)
 # ---------------------------------------------------------------------
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+# Actualiza esto cuando sepas tu URL exacta de Azure para que funcionen los formularios
 CSRF_TRUSTED_ORIGINS = ['https://cafe-del-angel-tamps.azurewebsites.net']
