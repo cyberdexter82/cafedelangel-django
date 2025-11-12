@@ -22,3 +22,4 @@ if __name__ == '__main__':
     main()
 
 # Forzando un redespliegue
+# Forzando redespliegue (sin ZIP)
