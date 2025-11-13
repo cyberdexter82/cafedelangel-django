@@ -91,12 +91,12 @@ if os.environ.get('DB_HOST'):
             'USER': os.environ.get('DB_USER'),
             'PASSWORD': os.environ.get('DB_PASSWORD'),
             'HOST': os.environ.get('DB_HOST'),
-            'PORT': os.environ.get('DB_PORT', '5432'),  # Cambié a string por consistencia
+            'PORT': os.environ.get('DB_PORT', '5432'),
             'OPTIONS': {'sslmode': 'require'},  # SSL para Azure
         }
     }
 else:
-    # Configuración para SQLite local (sin ssl_require, ya que no aplica)
+    # Configuración para SQLite local
     DATABASES = {
         'default': dj_database_url.config(
             default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
@@ -125,11 +125,13 @@ USE_TZ = True
 # ---------------------------------------------------------------------
 # ARCHIVOS ESTÁTICOS Y MEDIA
 # ---------------------------------------------------------------------
-STATIC_URL = '/static/'
+# ¡Cambio del "Truco del Prefijo"!
+STATIC_URL = '/'  # Servimos los estáticos desde la raíz para evitar problemas en Azure
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_DIRS = [BASE_DIR / 'static']  # Usando Path
 
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
+# Usar WhiteNoise para manejar archivos estáticos con mejor cacheo
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
