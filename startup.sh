@@ -28,3 +28,4 @@ echo "Preparación completada exitosamente"
 echo "=========================================="
 
 # NO ejecutar gunicorn aquí - Azure lo hará automáticamente
+#no se 
