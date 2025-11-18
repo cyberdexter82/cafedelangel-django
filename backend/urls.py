@@ -7,26 +7,26 @@ from django.views.static import serve
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    
-    # ✅ El módulo 'api.urls' ahora manejará las rutas de reseñas/avatar
-    path('api/', include('api.urls')), 
-    
-    path('', api_views.login_view, name='inicio'),
+
+    # Rutas de tu app API
+    path('api/', include('api.urls')),
+
+    # --- PÁGINA PRINCIPAL REAL (DEBE SER PÚBLICA) ---
+    path('', api_views.pagina_practica_view, name='inicio'),
+
+    # --- AUTENTICACIÓN ---
+    path('accounts/login/', api_views.login_view, name='login'),
+    path('accounts/logout/', api_views.logout_view, name='logout'),
 ]
 
-# -------------------------------------------------------------
-# CORRECCIÓN PARA AZURE (Se mantiene igual, es correcto)
-# -------------------------------------------------------------
-# 1. Configuramos las rutas de archivos estáticos y media
+# archivos estáticos
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
-# 2. EL TRUCO: Forzamos a Django a servir las imágenes de la carpeta media
 urlpatterns += [
     re_path(r'^media/(?P<path>.*)$', serve, {
         'document_root': settings.MEDIA_ROOT,
     }),
 ]
 
-# Tu manejador de errores 404
 handler404 = 'api.views.mi_handler404'

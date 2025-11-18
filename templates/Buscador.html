@@ -1,26 +1,46 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="es">
- <head>
-  <meta charset="utf-8"/>
-  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport"/>
-  <title>Buscador de Café</title>
-  
-  <link href="{% static 'css/style2.css' %}" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport"/>
+    <title>Buscador de Café</title>
+    
+    <!-- === INICIO: Código <head> Añadido === -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" /> <!-- Tu style.css general -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'coffee-dark': '#4A2312',
+                        'coffee-light': '#D2B48C',
+                        'coffee-accent': '#6F4E37',
+                        'background-light': '#F5F5DC',
+                        'brown-500': '#6F4E37',
+                        'brown-700': '#4A2312',
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- === FIN: Código <head> Añadido === -->
 
-  <style>
-    /* Estilos base para que el diseño se vea limpio */
+    <link href="{% static 'css/style2.css' %}" rel="stylesheet" /> <!-- Tu style2.css -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&amp;display=swap" rel="stylesheet"/>
+
+    <style>
+    /* Tus estilos personalizados se mantienen */
     body {
         font-family: 'Montserrat', sans-serif;
         background-color: #f5f5f5;
         color: #4A2312; /* Café Oscuro */
-        display: flex;
-        justify-content: center;
-        align-items: flex-start;
         min-height: 100vh;
         margin: 0;
-        padding-top: 50px;
+        /* Quitamos padding-top y align-items para que la nav se vea bien */
     }
 
     .container {
@@ -30,6 +50,8 @@
         padding: 30px;
         border-radius: 12px;
         box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+        /* Añadimos margen para centrarlo */
+        margin: 40px auto;
     }
 
     h1 {
@@ -121,65 +143,137 @@
     .card a:hover {
         text-decoration: underline;
     }
-  </style>
+    </style>
 
- </head>
- <body>
-  <div class="container" role="main">
-   <h1>Buscador de Café del Angel</h1>
-   
-   <div class="search-input-group">
-     <label for="searchInput">Buscar tu café preferible:</label>
-     <input id="searchInput" type="text" placeholder="Ejemplo: Café Moca" aria-label="Buscar café" />
-     <button id="searchBtn" type="button">Buscar</button>
-   </div>
+</head>
+<body class="font-sans"> <!-- Tu body usa font-sans de Tailwind -->
 
-   <section class="results" id="results" aria-live="polite" aria-atomic="true">
-        <!-- Contenido inicial (puedes borrarlo si prefieres empezar vacío) -->
-        <p>Inicia tu búsqueda para encontrar cafés y productos.</p>
-   </section>
-  </div>
+    <!-- === INICIO: Barras Añadidas === -->
+    <header class="bg-gray-50 text-xs py-2 border-b border-gray-200">
+        <div class="container mx-auto px-4 flex justify-between items-center max-w-6xl">
+            <div class="flex items-center gap-2 text-gray-600">
+                <i class="fas fa-headset text-brown-500"></i>
+                <span>Soporte al cliente 831-177-5372</span>
+            </div>
+            <div class="flex items-center gap-2 text-gray-600">
+                <i class="fas fa-shopping-cart text-brown-500"></i>
+                <span>Shopping (0)</span>
+            </div>
+        </div>
+    </header>
+    
+    <nav class="py-4 shadow-md bg-white">
+        <div class="container mx-auto px-4 flex justify-between items-center max-w-6xl">
+            <div class="flex items-center gap-8">
+                <img alt="Logo Cafe del Angel" src="{% static 'images/iconocafe1.png' %}" class="w-10 h-10 object-contain" />
+                
+                <div class="hidden md:flex gap-6 text-sm font-medium text-gray-700 items-center">
+                    
+                    <a href="{% url 'pagina_practica' %}" class="hover:text-brown-500">INICIO</a>
+                    <a href="{% url 'acerca' %}" class="hover:text-brown-500">MÁS</a>
+                    <a href="{% url 'resenas' %}" class="hover:text-brown-500">RESEÑAS</a>
+                    <a href="{% url 'autores' %}" class="hover:text-brown-500">INTEGRANTES</a>
+                    
+                    {% if user.is_authenticated %}
+                        
+                        <!-- ENLACE DE PERFIL MODIFICADO -->
+                        <a href="{% url 'perfil' %}" class="flex items-center gap-3 text-sm text-gray-700 hover:text-coffee-dark font-medium transition duration-200">
+    
+                            <img src="{% if user.profile.avatar %}{{ user.profile.avatar.url }}{% else %}{% static 'images/default_avatar.png' %}{% endif %}" 
+                                 alt="Avatar" 
+                                 class="w-8 h-8 rounded-full object-cover border-2 border-coffee-light">
+                            
+                            <span>¡Hola, <strong>{{ user.username }}</strong>!</span>
+                        </a>
 
-  <script>
+                        <a href="{% url 'logout' %}" class="text-red-600 hover:text-red-800 font-bold">CERRAR SESIÓN</a>
+                    {% else %}
+                        <a href="{% url 'login' %}" class="text-blue-600 hover:text-blue-800 font-bold">INICIAR SESIÓN</a>
+                        <a href="{% url 'registro' %}" class="hover:text-brown-500">REGISTRO</a>
+                    {% endif %}
+                    
+                </div>
+            </div>
+            <!-- El buscador de la NAV se omite, ya que esta es la PÁGINA del buscador -->
+        </div>
+    </nav>
+    <!-- === FIN: Barras Añadidas === -->
+
+
+    <!-- Tu contenido original del Buscador -->
+    <div class="container" role="main">
+        <h1>Buscador de Café del Angel</h1>
+        
+        <div class="search-input-group">
+            <label for="searchInput">Buscar tu café preferible:</label>
+            <input id="searchInput" type="text" placeholder="Ejemplo: Café Moca" aria-label="Buscar café" />
+            <button id="searchBtn" type="button">Buscar</button>
+        </div>
+
+        <section class="results" id="results" aria-live="polite" aria-atomic="true">
+            <!-- Contenido inicial (puedes borrarlo si prefieres empezar vacío) -->
+            <p>Inicia tu búsqueda para encontrar cafés y productos.</p>
+        </section>
+    </div>
+    <!-- Fin de tu contenido original -->
+
+
+    <!-- === INICIO: Footer (AÑADIDO) === -->
+    <footer class="bg-gray-100 py-8">
+        <div class="container mx-auto px-4 max-w-6xl">
+            <div class="max-w-xl mx-auto bg-gradient-to-b from-[#d49c4f] to-[#6b4f4f] p-4 rounded-md text-white text-xs text-center">
+                <h3 class="font-bold mb-2">CONTACTOS E INFO</h3>
+                <p>Dirección: 13 de septiembre #205</p>
+                <p>Teléfono: 831-177-5372</p>
+                <p>Fax: 93153300</p>
+                <p>Email: <strong class="underline">CafeDELAngel@gmail.com</strong></p>
+            </div>
+        </div>
+    </footer>
+    <!-- === FIN: Footer === -->
+
+
+    <!-- Tu JavaScript original se mantiene intacto -->
+    <script>
     const paginaPracticaUrl = "{% url 'pagina_practica' %}";
     
     // Lista de productos para la búsqueda
     const productos = [
-      { 
+        { 
         nombre: "Café Moca Capuchino Instantáneo", 
         descripcion: "Bolsitas de café instantáneo sabor capuchino moca, 8 x 0.63 oz", 
         enlace: paginaPracticaUrl
-      },
-      { 
+        },
+        { 
         nombre: "Expreso Americano", 
         descripcion: "Tienda virtual de café empacado y máquinas para amantes del café", 
         enlace: paginaPracticaUrl
-      },
-      { 
+        },
+        { 
         nombre: "Café instantáneo Capuchino sabor moca", 
         descripcion: "12 bolsas por caja, café con cafeína, tueste medio", 
         enlace: paginaPracticaUrl
-      },
-      { 
+        },
+        { 
         nombre: "Café Irish", 
         descripcion: "Delicioso café con licor Irish" , 
         enlace: paginaPracticaUrl
-      },
-      { 
+        },
+        { 
         nombre: "Café Inglés", 
         descripcion: "Sabor clásico inglés de café preparado",
         enlace: paginaPracticaUrl
-      },
-      { 
+        },
+        { 
         nombre: "Café Australiano", 
         descripcion: "Café con estilo australiano",
         enlace: paginaPracticaUrl
-      },
-      { 
+        },
+        { 
         nombre: "Café Helado", 
         descripcion: "Perfecto para disfrutar frío",
         enlace: paginaPracticaUrl
-      }
+        }
     ];
 
     // --- TU LÓGICA DE BÚSQUEDA ---
@@ -188,44 +282,44 @@
     const resultsContainer = document.getElementById('results');
 
     function sanitizeString(str) {
-      return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+        return str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
     }
 
     function buscarCafe() {
-      const queryRaw = searchInput.value.trim();
-      if(queryRaw.length === 0) {
+        const queryRaw = searchInput.value.trim();
+        if(queryRaw.length === 0) {
         resultsContainer.innerHTML = '<p>Por favor, ingresa texto para buscar café.</p>';
         return;
-      }
-      const query = sanitizeString(queryRaw);
-      const resultados = productos.filter(producto => 
+        }
+        const query = sanitizeString(queryRaw);
+        const resultados = productos.filter(producto => 
         sanitizeString(producto.nombre).includes(query) || 
         sanitizeString(producto.descripcion).includes(query)
-      );
+        );
 
-      if(resultados.length === 0) {
+        if(resultados.length === 0) {
         resultsContainer.innerHTML = '<p>No se encontraron productos o cafés para tu búsqueda.</p>';
         return;
     }
 
     resultsContainer.innerHTML = resultados.map(prod => `
         <article class="card" role="article" tabindex="0">
-          <h3>${prod.nombre}</h3>
+            <h3>${prod.nombre}</h3>
         <p>${prod.descripcion}</p>
-          <a href="${prod.enlace}" target="_blank" rel="noopener">Ver más</a>
-      </article>
+            <a href="${prod.enlace}" target="_blank" rel="noopener">Ver más</a>
+        </article>
     `).join('');
     }
 
     searchBtn.addEventListener('click', buscarCafe);
     searchInput.addEventListener('keydown', function(e) {
-      if(e.key === 'Enter') {
+        if(e.key === 'Enter') {
         buscarCafe();
-      }
+        }
     });
     
     // Si quieres que se muestre todo al cargar, puedes llamar a buscarCafe() aquí con un valor vacío
     // buscarCafe(); 
-  </script>
- </body>
+    </script>
+</body>
 </html>

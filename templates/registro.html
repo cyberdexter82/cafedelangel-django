@@ -9,42 +9,41 @@
     
     <style>
         body {
-            background-color: #f5f5f5; /* Fondo más suave */
+            background-color: #f5f5f5;
             font-family: Arial, sans-serif;
-            display: flex; /* Para centrar el contenido */
+            display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh; /* Altura mínima para que ocupe toda la vista */
+            min-height: 100vh;
             margin: 0;
         }
 
         .registration-card {
             max-width: 500px;
-            width: 90%; /* Hace que sea un poco más responsivo */
-            margin: 20px auto; /* Ajustado el margen superior */
-            padding: 30px; /* Más padding para que respire */
+            width: 90%;
+            margin: 20px auto;
+            padding: 30px;
             background: white;
-            border-radius: 12px; /* Bordes un poco más redondeados */
-            box-shadow: 0 6px 20px rgba(0,0,0,0.1); /* Sombra más pronunciada */
-            text-align: center; /* Centrar todo el texto dentro de la tarjeta */
+            border-radius: 12px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+            text-align: center;
         }
 
         .registration-card h1 {
-            font-size: 2.2em; /* Título más grande */
-            color: #4A2312; /* Café oscuro */
+            font-size: 2.2em;
+            color: #4A2312;
             margin-bottom: 10px;
         }
 
         .registration-card p {
-            font-size: 1.0em; /* Texto un poco más grande */
-            color: #666; /* Un gris más suave */
-            margin-bottom: 25px; /* Más espacio debajo de la descripción */
+            font-size: 1.0em;
+            color: #666;
+            margin-bottom: 25px;
         }
 
-        /* Estilos de los campos del formulario de Django */
         .registration-card .django-form p {
             margin-bottom: 15px;
-            text-align: left; /* Alinea los labels y campos a la izquierda */
+            text-align: left;
         }
         .registration-card .django-form label {
             display: block;
@@ -54,42 +53,42 @@
         }
         .registration-card .django-form input[type="text"],
         .registration-card .django-form input[type="password"],
-        .registration-card .django-form input[type="email"] { /* Si usas email */
+        .registration-card .django-form input[type="email"] {
             width: 100%;
-            padding: 12px; /* Más padding en los inputs */
+            padding: 12px;
             border: 1px solid #D2B48C;
-            border-radius: 6px; /* Bordes de inputs más redondeados */
+            border-radius: 6px;
             box-sizing: border-box;
-            font-size: 1em; /* Texto más legible en los inputs */
+            font-size: 1em;
         }
         .registration-card .django-form input:focus {
-            border-color: #6F4E37; /* Borde al hacer foco */
+            border-color: #6F4E37;
             outline: none;
-            box-shadow: 0 0 0 3px rgba(111, 78, 55, 0.2); /* Sombra suave al hacer foco */
+            box-shadow: 0 0 0 3px rgba(111, 78, 55, 0.2);
         }
 
         .registration-card button[type="submit"] {
             width: 100%;
             padding: 12px;
-            background-color: #6F4E37; /* Café principal */
+            background-color: #6F4E37;
             color: white;
             border: none;
             border-radius: 6px;
             cursor: pointer;
-            font-size: 1.1em; /* Botón más grande */
+            font-size: 1.1em;
             font-weight: bold;
-            margin-top: 20px; /* Espacio antes del botón */
-            transition: background-color 0.3s ease; /* Transición suave */
+            margin-top: 20px;
+            transition: background-color 0.3s ease;
         }
         .registration-card button[type="submit"]:hover {
-            background-color: #4A2312; /* Café oscuro al pasar el ratón */
+            background-color: #4A2312;
         }
 
         .registration-card hr {
             border: 0;
             height: 1px;
-            background-color: #eee; /* Línea divisoria más suave */
-            margin: 30px 0; /* Más espacio alrededor de la línea */
+            background-color: #eee;
+            margin: 30px 0;
         }
 
         .registration-card .login-link {
@@ -97,23 +96,22 @@
             color: #555;
         }
         .registration-card .login-link a {
-            color: #6F4E37; /* Color del link de inicio de sesión */
+            color: #6F4E37;
             text-decoration: none;
             font-weight: bold;
             transition: color 0.3s ease;
         }
         .registration-card .login-link a:hover {
-            color: #4A2312; /* Color oscuro al pasar el ratón */
+            color: #4A2312;
             text-decoration: underline;
         }
 
-        /* Estilos para los mensajes de error de Django */
         .errorlist {
             list-style: none;
             padding: 0;
             margin-bottom: 15px;
-            color: #a94442; /* Rojo más oscuro */
-            background-color: #f2dede; /* Fondo rojo claro */
+            color: #a94442;
+            background-color: #f2dede;
             border: 1px solid #ebccd1;
             border-radius: 4px;
             padding: 10px 15px;
@@ -135,7 +133,8 @@
         <h1>Crear una Cuenta Nueva</h1>
         <p>Por favor, completa los campos para registrarte.</p>
         
-        <form method="post" novalidate class="django-form">
+        <!-- 🔥 FORMULARIO CORREGIDO -->
+        <form method="post" action="" novalidate class="django-form">
             {% csrf_token %}
 
             {% if form.non_field_errors %}

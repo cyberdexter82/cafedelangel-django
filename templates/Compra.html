@@ -1,37 +1,42 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="es">
- <head>
-  <meta charset="utf-8"/>
-  <meta content="width=device-width, initial-scale=1" name="viewport"/>
-  <title>
-  	Comprar Café - Café del Ángel
-  </title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet"/>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&amp;display=swap" rel="stylesheet"/>
-  <link href="{% static 'css/style.css' %}" rel="stylesheet"/>
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1" name="viewport"/>
+    <title>
+        Comprar Café - Café del Ángel
+    </title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&amp;display=swap" rel="stylesheet"/>
+    <link href="{% static 'css/style.css' %}" rel="stylesheet"/>
 
-  <script>
-    // Configuración de colores de café para Tailwind
-    tailwind.config = {
-        theme: {
-            extend: {
-                colors: {
-                    // Mapeo de colores para usar en JS y CSS
-                    'brown-main': '#6b4f4f',
-                    'brown-dark': '#4a2312',
-                    'yellow-accent': '#d4a373',
+    <script>
+        // Configuración de colores (¡COMBINADA!)
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        // Colores de esta página
+                        'brown-main': '#6b4f4f',
+                        'brown-dark': '#4a2312',
+                        'yellow-accent': '#d4a373',
+                        
+                        // Colores de la barra de navegación
+                        'coffee-dark': '#4A2312',
+                        'coffee-light': '#D2B48C',
+                        'coffee-accent': '#6F4E37',
+                        'brown-500': '#6F4E37',
+                        'brown-700': '#4A2312',
+                    }
                 }
             }
         }
-    }
-  </script>
+    </script>
 
-  <style>
-    /* Se definen las variables CSS aquí para que estén disponibles 
-    en todos los bloques de estilo, ya que no se pueden usar las de Tailwind directamente en CSS.
-    */
+    <style>
+    /* Tu CSS personalizado se mantiene intacto */
     :root {
         --brown-main: #6b4f4f;
         --brown-dark: #4a2312;
@@ -177,73 +182,145 @@
     .modal-close:hover {
         background-color: var(--brown-dark);
     }
-  </style>
- </head>
- <body class="bg-gray-50 text-gray-900">
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-900">
 
-  <div class="cart-dropdown-container">
-    <button class="cart-btn" id="cart-button">
-      <i class="fas fa-shopping-cart mr-2"></i>
-      <span class="font-bold text-lg" id="cart-counter">0</span>
-    </button>
+    <!-- === INICIO: Barra de Soporte (AÑADIDA) === -->
+    <header class="bg-gray-50 text-xs py-2 border-b border-gray-200">
+        <div class="container mx-auto px-4 flex justify-between items-center max-w-6xl">
+            <div class="flex items-center gap-2 text-gray-600">
+                <i class="fas fa-headset text-brown-500"></i>
+                <span>Soporte al cliente 831-177-5372</span>
+            </div>
+            <div class="flex items-center gap-2 text-gray-600">
+                <i class="fas fa-shopping-cart text-brown-500"></i>
+                <span>Shopping (0)</span>
+            </div>
+        </div>
+    </header>
+    
+    <!-- === INICIO: Barra de Navegación (AÑADIDA Y MODIFICADA) === -->
+    <nav class="py-4 shadow-md bg-white">
+        <div class="container mx-auto px-4 flex justify-between items-center max-w-6xl">
+            <div class="flex items-center gap-8">
+                <img alt="Logo Cafe del Angel" src="{% static 'images/iconocafe1.png' %}" class="w-10 h-10 object-contain" />
+                
+                <div class="hidden md:flex gap-6 text-sm font-medium text-gray-700 items-center">
+                    
+                    <a href="{% url 'pagina_practica' %}" class="hover:text-brown-500">INICIO</a>
+                    <a href="{% url 'acerca' %}" class="hover:text-brown-500">MÁS</a>
+                    <a href="{% url 'resenas' %}" class="hover:text-brown-500">RESEÑAS</a>
+                    <a href="{% url 'autores' %}" class="hover:text-brown-500">INTEGRANTES</a>
+                    
+                    {% if user.is_authenticated %}
+                        <!-- ENLACE DE PERFIL MODIFICADO -->
+                        <a href="{% url 'perfil' %}" class="flex items-center gap-3 text-sm text-gray-700 hover:text-coffee-dark font-medium transition duration-200">
+                            <img src="{% if user.profile.avatar %}{{ user.profile.avatar.url }}{% else %}{% static 'images/default_avatar.png' %}{% endif %}" 
+                                 alt="Avatar" 
+                                 class="w-8 h-8 rounded-full object-cover border-2 border-coffee-light">
+                            <span>¡Hola, <strong>{{ user.username }}</strong>!</span>
+                        </a>
+                        <a href="{% url 'logout' %}" class="text-red-600 hover:text-red-800 font-bold">CERRAR SESIÓN</a>
+                    {% else %}
+                        <a href="{% url 'login' %}" class="text-blue-600 hover:text-blue-800 font-bold">INICIAR SESIÓN</a>
+                        <a href="{% url 'registro' %}" class="hover:text-brown-500">REGISTRO</a>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="flex items-center border border-gray-300 rounded-lg overflow-hidden">
+                <input placeholder="Buscar..." type="text" class="p-2 text-sm focus:outline-none w-32 sm:w-48" />
+                <button class="bg-brown-500 p-2 text-white hover:bg-brown-700 transition duration-150">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+    <!-- === FIN: Barras Añadidas === -->
 
-    <div class="cart-dropdown hidden" id="cart-dropdown-content">
-      <div id="cart-items-list">
-        <p class="cart-empty-message">El carrito está vacío. ¡Compra algo!</p>
-      </div>
-      <div class="cart-actions">
-        <a href="{% url 'pagina_practica' %}">Ir a Inicio</a>
-      </div>
+
+    <!-- Tu contenido original (Carrito y Lista de Compra) -->
+    <div class="cart-dropdown-container">
+        <button class="cart-btn" id="cart-button">
+            <i class="fas fa-shopping-cart mr-2"></i>
+            <span class="font-bold text-lg" id="cart-counter">0</span>
+        </button>
+
+        <div class="cart-dropdown hidden" id="cart-dropdown-content">
+            <div id="cart-items-list">
+                <p class="cart-empty-message">El carrito está vacío. ¡Compra algo!</p>
+            </div>
+            <div class="cart-actions">
+                <a href="{% url 'pagina_practica' %}">Ir a Inicio</a>
+            </div>
+        </div>
     </div>
-  </div>
 
-  <main class="max-w-md mx-auto p-6 pt-20">
-   <h1 class="text-3xl font-extrabold text-brown-dark mb-8 text-center">
-    Lista de Cafés
-   </h1>
-   <ul class="space-y-4">
-    <li class="flex justify-between items-center bg-white p-4 rounded shadow">
-     <span class="text-lg font-semibold">Café Moca</span>
-     <button class="btn-buy" data-product="Café Moca" type="button">Comprar</button>
-    </li>
-    <li class="flex justify-between items-center bg-white p-4 rounded shadow">
-     <span class="text-lg font-semibold">Expreso Americano</span>
-     <button class="btn-buy" data-product="Expreso Americano" type="button">Comprar</button>
-    </li>
-    <li class="flex justify-between items-center bg-white p-4 rounded shadow">
-     <span class="text-lg font-semibold">Capuchino</span>
-     <button class="btn-buy" data-product="Capuchino" type="button">Comprar</button>
-    </li>
-    <li class="flex justify-between items-center bg-white p-4 rounded shadow">
-     <span class="text-lg font-semibold">Cafe Irish</span>
-     <button class="btn-buy" data-product="Cafe Irish" type="button">Comprar</button>
-    </li>
-    <li class="flex justify-between items-center bg-white p-4 rounded shadow">
-     <span class="text-lg font-semibold">Cafe Inglés</span>
-     <button class="btn-buy" data-product="Cafe Inglés" type="button">Comprar</button>
-    </li>
-    <li class="flex justify-between items-center bg-white p-4 rounded shadow">
-     <span class="text-lg font-semibold">Cafe Australiano</span>
-     <button class="btn-buy" data-product="Cafe Australiano" type="button">Comprar</button>
-    </li>
-    <li class="flex justify-between items-center bg-white p-4 rounded shadow">
-     <span class="text-lg font-semibold">Cafe Helado</span>
-     <button class="btn-buy" data-product="Cafe Helado" type="button">Comprar</button>
-    </li>
-   </ul>
-  </main>
+    <main class="max-w-md mx-auto p-6 pt-20">
+        <h1 class="text-3xl font-extrabold text-brown-dark mb-8 text-center">
+        Lista de Cafés
+        </h1>
+        <ul class="space-y-4">
+        <li class="flex justify-between items-center bg-white p-4 rounded shadow">
+            <span class="text-lg font-semibold">Café Moca</span>
+            <button class="btn-buy" data-product="Café Moca" type="button">Comprar</button>
+        </li>
+        <li class="flex justify-between items-center bg-white p-4 rounded shadow">
+            <span class="text-lg font-semibold">Expreso Americano</span>
+            <button class="btn-buy" data-product="Expreso Americano" type="button">Comprar</button>
+        </li>
+        <li class="flex justify-between items-center bg-white p-4 rounded shadow">
+            <span class="text-lg font-semibold">Capuchino</span>
+            <button class="btn-buy" data-product="Capuchino" type="button">Comprar</button>
+        </li>
+        <li class="flex justify-between items-center bg-white p-4 rounded shadow">
+            <span class="text-lg font-semibold">Cafe Irish</span>
+            <button class="btn-buy" data-product="Cafe Irish" type="button">Comprar</button>
+        </li>
+        <li class="flex justify-between items-center bg-white p-4 rounded shadow">
+            <span class="text-lg font-semibold">Cafe Inglés</span>
+            <button class="btn-buy" data-product="Cafe Inglés" type="button">Comprar</button>
+        </li>
+        <li class="flex justify-between items-center bg-white p-4 rounded shadow">
+            <span class="text-lg font-semibold">Cafe Australiano</span>
+            <button class="btn-buy" data-product="Cafe Australiano" type="button">Comprar</button>
+        </li>
+        <li class="flex justify-between items-center bg-white p-4 rounded shadow">
+            <span class="text-lg font-semibold">Cafe Helado</span>
+            <button class="btn-buy" data-product="Cafe Helado" type="button">Comprar</button>
+        </li>
+        </ul>
+    </main>
 
-  <div aria-hidden="true" class="modal hidden" id="modal">
-   <div class="modal-content">
-    <h3 class="modal-title" id="modal-title"></h3>
-    <p class="modal-message" id="modal-message"></p>
-    <button aria-label="Cerrar mensaje" class="modal-close" id="modal-close" type="button">
-     Entendido
-    </button>
-   </div>
-  </div>
+    <div aria-hidden="true" class="modal hidden" id="modal">
+        <div class="modal-content">
+        <h3 class="modal-title" id="modal-title"></h3>
+        <p class="modal-message" id="modal-message"></p>
+        <button aria-label="Cerrar mensaje" class="modal-close" id="modal-close" type="button">
+        Entendido
+        </button>
+        </div>
+    </div>
+    <!-- Fin de tu contenido original -->
 
-  <script>
+    
+    <!-- === INICIO: Footer (AÑADIDO) === -->
+    <footer class="bg-gray-100 py-8">
+        <div class="container mx-auto px-4 max-w-6xl">
+            <div class="max-w-xl mx-auto bg-gradient-to-b from-[#d49c4f] to-[#6b4f4f] p-4 rounded-md text-white text-xs text-center">
+                <h3 class="font-bold mb-2">CONTACTOS E INFO</h3>
+                <p>Dirección: 13 de septiembre #205</p>
+                <p>Teléfono: 831-177-5372</p>
+                <p>Fax: 93153300</p>
+                <p>Email: <strong class="underline">CafeDELAngel@gmail.com</strong></p>
+            </div>
+        </div>
+    </footer>
+    <!-- === FIN: Footer === -->
+
+
+    <!-- Tu JavaScript original se mantiene intacto -->
+    <script>
     // Usamos un array para almacenar los nombres de los productos
     let cartItems = []; 
 
@@ -306,7 +383,7 @@
 
     // 1. EVENTO AL HACER CLIC EN "COMPRAR"
     buyButtons.forEach(button => {
-      button.addEventListener('click', () => {
+    button.addEventListener('click', () => {
         const productName = button.getAttribute('data-product');
         
         // Agrega el producto al array
@@ -315,7 +392,7 @@
 
         // Muestra modal de éxito
         showModal('¡Compra Exitosa!', `El ${productName} ha sido añadido a tu pedido. Total: ${cartItems.length} cafés.`);
-      });
+    });
     });
 
     // 2. EVENTO AL HACER CLIC EN EL ÍCONO DEL CARRITO
@@ -332,33 +409,33 @@
 
     // 3. EVENTOS PARA CERRAR MODAL
     modalClose.addEventListener('click', () => {
-      modal.classList.add('hidden');
-      document.body.style.overflow = '';
+    modal.classList.add('hidden');
+    document.body.style.overflow = '';
     });
 
     modal.addEventListener('click', (e) => {
-      if (e.target === modal) {
+    if (e.target === modal) {
         modal.classList.add('hidden');
         document.body.style.overflow = '';
-      }
+    }
     });
 
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
+    if (e.key === 'Escape') {
         // Cierra el modal si está abierto
         if (!modal.classList.contains('hidden')) {
-          modal.classList.add('hidden');
-          document.body.style.overflow = '';
+            modal.classList.add('hidden');
+            document.body.style.overflow = '';
         }
         // Cierra el dropdown del carrito si está abierto
         if (!cartDropdown.classList.contains('hidden')) {
-              cartDropdown.classList.add('hidden');
+                cartDropdown.classList.add('hidden');
         }
-      }
+    }
     });
 
     // Inicializa la vista del carrito
     updateCartDisplay();
-  </script>
- </body>
+    </script>
+</body>
 </html>

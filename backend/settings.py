@@ -1,11 +1,11 @@
 """
 Django settings for backend project.
-Configurado para despliegue en Azure App Service.
+Modificado para despliegue en AWS Elastic Beanstalk con RDS MySQL.
 """
 
 import os
 from pathlib import Path
-import dj_database_url
+# import dj_database_url  <- Ya no lo necesitamos, lo quitamos.
 
 # BASE DIR
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -17,10 +17,11 @@ TEMPLATES_DIR = BASE_DIR / 'templates'  # Usando Path para consistencia
 # SEGURIDAD Y CONFIGURACIÓN DE HOSTS
 # ---------------------------------------------------------------------
 
-# Leemos la variable DEBUG desde Azure
-DEBUG = os.environ.get("DEBUG", "False").lower() == "true"
-
-ALLOWED_HOSTS = ["*"]  # En producción, especifica hosts explícitos
+# Leemos la variable DEBUG (para EB, esto se puede configurar en la consola)
+#DEBUG = os.environ.get("DEBUG", "False").lower() == "true"
+DEBUG = True  # Temporalmente en True para pruebas
+# Permitimos '*' para que funcione con la URL de Elastic Beanstalk
+ALLOWED_HOSTS = ["*"]
 
 # SECRET_KEY
 SECRET_KEY = os.environ.get(
@@ -80,29 +81,21 @@ TEMPLATES = [
 WSGI_APPLICATION = 'backend.wsgi.application'
 
 # ---------------------------------------------------------------------
-# BASE DE DATOS (Conexión a PostgreSQL en Azure o SQLite local)
+# BASE DE DATOS (Configuración para AWS RDS MySQL)
 # ---------------------------------------------------------------------
-if os.environ.get('DB_HOST'):
-    # Configuración para PostgreSQL usando variables de entorno de Azure
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': os.environ.get('DB_NAME'),
-            'USER': os.environ.get('DB_USER'),
-            'PASSWORD': os.environ.get('DB_PASSWORD'),
-            'HOST': os.environ.get('DB_HOST'),
-            'PORT': os.environ.get('DB_PORT', '5432'),
-            'OPTIONS': {'sslmode': 'require'},  # SSL para Azure
-        }
+
+# Hemos reemplazado la lógica de Azure/SQLite por la conexión directa a RDS
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'bd_isc5',                 # El nombre de tu BD
+        'USER': 'adminisc',               # Tu usuario maestro de RDS
+        'PASSWORD': '00sasuke00',         # Tu nueva contraseña
+        'HOST': 'bd-isc5.cils0ssqwuu2.us-east-1.rds.amazonaws.com', # Tu Endpoint de RDS
+        'PORT': '3306',
     }
-else:
-    # Configuración para SQLite local
-    DATABASES = {
-        'default': dj_database_url.config(
-            default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
-            conn_max_age=600
-        )
-    }
+}
+
 
 # ---------------------------------------------------------------------
 # VALIDACIÓN DE CONTRASEÑAS
@@ -125,12 +118,13 @@ USE_TZ = True
 # ---------------------------------------------------------------------
 # ARCHIVOS ESTÁTICOS Y MEDIA
 # ---------------------------------------------------------------------
-# ¡Cambio del "Truco del Prefijo"!
-STATIC_URL = '/'  # Servimos los estáticos desde la raíz para evitar problemas en Azure
-STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATICFILES_DIRS = [BASE_DIR / 'static']  # Usando Path
 
-# Usar WhiteNoise para manejar archivos estáticos con mejor cacheo
+STATIC_URL = '/static/'
+# Esta ruta es la correcta para tu proyecto y para Elastic Beanstalk
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_DIRS = [BASE_DIR / 'static']
+
+# Usar WhiteNoise para manejar archivos estáticos
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 MEDIA_URL = '/media/'
@@ -143,9 +137,13 @@ AUTH_USER_MODEL = 'usuarios.Usuario'
 LOGIN_URL = 'login'
 
 # ---------------------------------------------------------------------
-# SEGURIDAD EXTRA (recomendado para producción)
+# SEGURIDAD EXTRA (para despliegue)
 # ---------------------------------------------------------------------
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
-# Usamos un comodín para aceptar la URL larga de Azure
-CSRF_TRUSTED_ORIGINS = ['https://*.azurewebsites.net']
+# Agregamos la URL de Elastic Beanstalk a los orígenes de confianza
+# (aunque '*' en ALLOWED_HOSTS ya es bastante permisivo)
+CSRF_TRUSTED_ORIGINS = [
+    'https://*.azurewebsites.net',
+    'http://*.elasticbeanstalk.com' # Agregamos esto para AWS
+]

@@ -17,6 +17,11 @@
                 colors: {
                     'brown-500': '#6F4E37', 
                     'brown-700': '#4A2312',
+                    
+                    /* --- COLORES AÑADIDOS PARA LA NAV --- */
+                    'coffee-dark': '#4A2312',
+                    'coffee-light': '#D2B48C',
+                    'coffee-accent': '#6F4E37',
                 }
             }
         }
@@ -102,7 +107,23 @@
             <div class="flex items-center gap-4">
                 <!-- Saludo al usuario y botón de Logout -->
                 {% if user.is_authenticated %}
-                    <span class="text-sm text-gray-600">¡Hola, <strong>{{ user.username }}</strong>!</span>
+
+                    <!-- 
+                        === INICIO DE LA MODIFICACIÓN ===
+                        Reemplazamos el <span> por este <a>
+                    -->
+                    <a href="{% url 'perfil' %}" class="flex items-center gap-3 text-sm text-gray-700 hover:text-coffee-dark font-medium transition duration-200">
+    
+                        <!-- Muestra el avatar del usuario -->
+                        <img src="{% if user.profile.avatar %}{{ user.profile.avatar.url }}{% else %}{% static 'images/default_avatar.png' %}{% endif %}" 
+                             alt="Avatar" 
+                             class="w-8 h-8 rounded-full object-cover border-2 border-coffee-light">
+                        
+                        <!-- Muestra el saludo -->
+                        <span>¡Hola, <strong>{{ user.username }}</strong>!</span>
+                    </a>
+                    <!-- === FIN DE LA MODIFICACIÓN === -->
+
                     <a href="{% url 'logout' %}" class="text-sm font-medium text-red-600 hover:text-red-800">CERRAR SESIÓN</a>
                 {% endif %}
             </div>
@@ -128,5 +149,19 @@
             
         </div>
     </div>
+    
+    <!-- === INICIO: Footer (AÑADIDO) === -->
+    <footer class="bg-gray-100 py-8">
+        <div class="container mx-auto px-4 max-w-6xl">
+            <div class="max-w-xl mx-auto bg-gradient-to-b from-[#d49c4f] to-[#6b4f4f] p-4 rounded-md text-white text-xs text-center">
+                <h3 class="font-bold mb-2">CONTACTOS E INFO</h3>
+                <p>Dirección: 13 de septiembre #205</p>
+                <p>Teléfono: 831-177-5372</p>
+                <p>Fax: 93153300</p>
+                <p>Email: <strong class="underline">CafeDELAngel@gmail.com</strong></p>
+            </div>
+        </div>
+    </footer>
+    <!-- === FIN: Footer === -->
 </body>
 </html>

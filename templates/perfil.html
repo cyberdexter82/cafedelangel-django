@@ -1,0 +1,163 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mi Perfil - Cafe del Angel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'coffee-dark': '#4A2312',
+                        'coffee-light': '#D2B48C',
+                        'coffee-accent': '#6F4E37',
+                        'background-light': '#F5F5DC',
+                        'brown-500': '#6F4E37',
+                        'brown-700': '#4A2312',
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+
+<body class="bg-background-light min-h-screen">
+
+    <header class="bg-gray-50 text-xs py-2 border-b border-gray-200">
+        <div class="container mx-auto px-4 flex justify-between items-center max-w-6xl">
+            <div class="flex items-center gap-2 text-gray-600">
+                <i class="fas fa-headset text-brown-500"></i>
+                <span>Soporte al cliente 831-177-5372</span>
+            </div>
+            <div class="flex items-center gap-2 text-gray-600">
+                <i class="fas fa-shopping-cart text-brown-500"></i>
+                <span>Shopping (0)</span>
+            </div>
+        </div>
+    </header>
+    
+    <nav class="py-4 shadow-md bg-white">
+        <div class="container mx-auto px-4 flex justify-between items-center max-w-6xl">
+            <div class="flex items-center gap-8">
+                <img alt="Logo Cafe del Angel" src="{% static 'images/iconocafe1.png' %}" class="w-10 h-10 object-contain" />
+                <div class="hidden md:flex gap-6 text-sm font-medium text-gray-700">
+                    {% if user.is_authenticated %}
+                        <a href="{% url 'pagina_practica' %}" class="hover:text-brown-500">INICIO</a>
+                        <a href="{% url 'acerca' %}" class="hover:text-brown-500">MÁS</a>
+                        <a href="{% url 'resenas' %}" class="hover:text-brown-500">RESEÑAS</a>
+                        <a href="{% url 'autores' %}" class="hover:text-brown-500">INTEGRANTES</a>
+                    {% else %}
+                        <a href="{% url 'login' %}" class="hover:text-brown-500">INICIAR SESIÓN</a>
+                        <a href="{% url 'registro' %}" class="hover:text-brown-500">REGISTRO</a>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="flex items-center gap-4">
+                {% if user.is_authenticated %}
+                    
+                    <a href="{% url 'perfil' %}" class="flex items-center gap-3 text-sm text-gray-700 hover:text-coffee-dark font-medium transition duration-200">
+    
+                        <img src="{% if user.profile.avatar %}{{ user.profile.avatar.url }}{% else %}{% static 'images/default_avatar.png' %}{% endif %}" 
+                             alt="Avatar" 
+                             class="w-8 h-8 rounded-full object-cover border-2 border-coffee-light">
+                        
+                        <span>¡Hola, <strong>{{ user.username }}</strong>!</span>
+                    </a>
+                    <a href="{% url 'logout' %}" class="text-sm font-medium text-red-600 hover:text-red-800">CERRAR SESIÓN</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+    <div class="max-w-2xl mx-auto p-6 lg:p-10">
+
+        {% if messages %}
+            <div class="mb-6">
+                {% for message in messages %}
+                    <div class="p-4 rounded-md {% if message.tags == 'success' %}bg-green-100 text-green-800{% else %}bg-red-100 text-red-800{% endif %}" role="alert">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <div class="bg-white rounded-xl shadow-lg p-8">
+            <h2 class="text-3xl font-extrabold text-coffee-dark mb-6 text-center">Configuración de Perfil</h2>
+            
+            <form method="post" enctype="multipart/form-data" class="space-y-4">
+                {% csrf_token %}
+
+                <div class="mb-6 text-center">
+                    <p class="text-sm text-gray-600 mb-2">Tu avatar:</p>
+                    
+                    <img id="avatar-preview" 
+                         src="{% if user.profile.avatar %}{{ user.profile.avatar.url }}{% else %}{% static 'images/default_avatar.png' %}{% endif %}" 
+                         alt="Avatar actual" 
+                         class="w-32 h-32 rounded-full object-cover mx-auto mb-4 border-4 border-coffee-light shadow-md">
+                    
+                    <div>
+                        <label for="{{ form.avatar.id_for_label }}" class="block text-gray-700 font-medium mb-2">
+                            {{ form.avatar.label }}:
+                        </label>
+                        
+                        {{ form.avatar }}
+                        
+                        {% if form.avatar.errors %}
+                            <div class="text-red-500 text-sm mt-1">
+                                {% for error in form.avatar.errors %}<p>{{ error }}</p>{% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    </div>
+                
+                <button type="submit" class="w-full bg-coffee-dark text-white font-semibold py-3 rounded-lg hover:bg-coffee-accent transition duration-200 shadow-md mt-6">
+                    Guardar Cambios
+                </button>
+            </form>
+            
+            <div class="mt-8 border-t border-gray-200 pt-6 text-center">
+                 <p class="text-gray-700 mb-2">¿Necesitas cambiar tu contraseña?</p>
+                 <a href="{% url 'password_change' %}" class="text-coffee-accent hover:underline font-medium">Cambiar mi contraseña</a>
+            </div>
+        </div>
+    </div>
+    <script>
+        // Busca el input de archivo por su ID (que Django genera)
+        // NOTA: {{ form.avatar.id_for_label }} funcionará porque '{{ form.avatar }}' lo renderiza
+        const avatarInput = document.getElementById('{{ form.avatar.id_for_label }}');
+        
+        // Busca la imagen de previsualización
+        const avatarPreview = document.getElementById('avatar-preview');
+
+        // Guarda la URL de la imagen original por si el usuario cancela
+        const originalSrc = avatarPreview.src;
+
+        // Escucha el evento 'change' (cuando el usuario elige un archivo)
+        avatarInput.addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            
+            if (file) {
+                // Si hay un archivo, usa FileReader para leerlo
+                const reader = new FileReader();
+                
+                reader.onloadend = function() {
+                    // Cuando esté leído, pon el resultado (data URL) en el 'src' de la imagen
+                    avatarPreview.src = reader.result;
+                }
+                
+                reader.readAsDataURL(file);
+            } else {
+                // Si el usuario cancela, vuelve a poner la imagen original
+                avatarPreview.src = originalSrc;
+            }
+        });
+    </script>
+
+</body>
+</html>
